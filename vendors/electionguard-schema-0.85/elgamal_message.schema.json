@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "elgamal_message.schema.json",
+  "title": "ElGamal Message",
+  "description": "A message that has been encrypted using exponential ElGamal.",
+  "type": "object",
+  "properties": {
+    "public_key": {
+      "description": "The one-time public key `a = gʳ`, where `r` is the randomly generated one-time public key.",
+      "$ref": "big_nat.schema.json"
+    },
+    "ciphertext": {
+      "description": "The encoding `b = gᵐ hʳ`, where `m` is the cleartext and `h` is the recipient public key being used for encryption.",
+      "$ref": "big_nat.schema.json"
+    }
+  },
+  "required": [
+    "public_key",
+    "ciphertext"
+  ]
+}
