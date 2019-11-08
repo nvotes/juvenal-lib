@@ -24,6 +24,7 @@ export declare namespace arithm {
         modPow(exponent: LargeInteger, modulus: LargeInteger, naive?: boolean): LargeInteger
         toHexString(): string
         toByteTree(): eio.ByteTree
+        toByteArray(): Uint8Array
 
         static ONE: LargeInteger
     }

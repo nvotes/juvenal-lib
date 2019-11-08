@@ -49,6 +49,7 @@ function convert_ajv_errors(
  */
 export class VElectionRecord implements VRecord {
     election: ElectionRecord;
+    _context: string[] = ["Election"];
 
     constructor(election_record: ElectionRecord) {
         this.election = election_record;
@@ -57,10 +58,12 @@ export class VElectionRecord implements VRecord {
     modp_group(): arithm.ModPGroup {
         return modp_group;
     }
+
+    context(): string[] {
+        return this._context;
+    }
     
     verify(recorder: VRecorder): void {
-        const context = ["election"];
-
         ///////////////// Non-Crypto verifications ///////////////////////////
 
         // validate the JSON schema
@@ -71,7 +74,7 @@ export class VElectionRecord implements VRecord {
                 .forEach((error) => 
                     recorder.record(
                         /*status=*/false,
-                        context,
+                        this.context(),
                         "ValidateJsonSchema",
                         error.dataPath + " " + error.message
                     )
@@ -80,7 +83,7 @@ export class VElectionRecord implements VRecord {
             // record successful verification
             recorder.record(
                 /*status=*/true,
-                context,
+                this.context(),
                 "ValidateJsonSchema",
                 "Election record JSON schema should validate"
             )
@@ -90,14 +93,14 @@ export class VElectionRecord implements VRecord {
         // cannot not verify itself
         recorder.record(
             this.election.parameters.threshold <= this.election.parameters.num_trustees,
-            context,
+            this.context(),
             "ThresholdTrustees",
             "The threshold of trustees that can decrypt the election should " +
             "be less than or equal to the number of trustees"
         );
         recorder.record(
             this.election.trustee_public_keys.length == this.election.parameters.num_trustees,
-            context,
+            this.context(),
             "NumPubKeys",
             "The number of trustee public keys is equal to the defined " +
             "number of trustees"
@@ -113,7 +116,7 @@ export class VElectionRecord implements VRecord {
             new arithm.LargeInteger(
                 str_dec_to_hex(this.election.parameters.prime)
             ).equals(modp_group.modulus),
-            context,
+            this.context(),
             "BaselineEncryptionModulus",
             "The election should use baseline encryption modulus"
         );
@@ -122,7 +125,7 @@ export class VElectionRecord implements VRecord {
             new arithm.LargeInteger(
                 str_dec_to_hex(this.election.parameters.generator)
             ).equals(modp_group.getg().value),
-            context,
+            this.context(),
             "BaselineEncryptionGenerator",
             "The election should use baseline encryption group generator"
         );
@@ -134,13 +137,13 @@ export class VElectionRecord implements VRecord {
         let v_coefficients: VCoefficientCommitmentsMatrixRecord[] = [];
         try {
             v_coefficients = coefficients
-                .map((pub_key) =>
-                    new VCoefficientCommitmentsMatrixRecord(this, pub_key)
+                .map((pub_key, index) =>
+                    new VCoefficientCommitmentsMatrixRecord(this, pub_key, index + 1)
                 );
         } catch(err) {
             recorder.record(
                 false,
-                context,
+                this.context(),
                 "CoefficientCommitmentsLoading",
                 "Error loading trustees coefficient commitments: " + err.message
             );
@@ -163,18 +166,22 @@ export class VElectionRecord implements VRecord {
         if (err !== null) {
             recorder.record(
                 false,
-                context,
+                this.context(),
                 "JointPublicKeyCalculation",
                 "Error loading the public key of the election: " + err.message
             );
         } else {
             recorder.record(
-                calculated_joint_pub_key.equals(joint_public_key as arithm.ModPGroupElement),
-                context,
+                calculated_joint_pub_key
+                    .equals(joint_public_key as arithm.ModPGroupElement),
+                this.context(),
                 "JointPublicKeyCalculation",
-                "The public key of the election should be the combination of " +
-                "the public keys of all the trustees"
+                "The public key of the election should be the combination " +
+                "of the public keys of all the trustees"
             );
         }
+
+        // Verify coefficient records
+        v_coefficients.map((v_coefficient) => v_coefficient.verify(recorder));
     }
 }

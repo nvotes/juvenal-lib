@@ -13,6 +13,18 @@ export function str_dec_to_hex(dec_li_str: string | number): string {
 }
 
 /**
+ * Receives a string of a number in decimal base and returns it as
+ * a byte array.
+ * @param dec_li_str A decimal large integer number either as a string
+ *                   or as a native typescript number.
+ */
+export function str_dec_to_byte_array(
+    dec_li_str: string | number
+): Uint8Array {
+    return util.hexToByteArray(BigInt(dec_li_str).toString(16));
+}
+
+/**
  * Converts a number as a string into a byte tree of the correct size.
  * 
  * @param dec_li_str A decimal large integer number either as a string
