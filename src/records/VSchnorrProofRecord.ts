@@ -47,27 +47,38 @@ export class VSchnorrProofRecord implements VRecord {
     verify(recorder: VRecorder): void {
         const group = this.instance.pGroup;
 
-        const commitment = str_dec_to_byte_array(this.proof.commitment);
-        const challenge = str_dec_to_byte_array(this.proof.challenge);
-        const response = str_dec_to_byte_array(this.proof.response);
+        // wrapped in a try-catch because deserialization could fail
+        try {
+            const commitment = str_dec_to_byte_array(this.proof.commitment);
+            const challenge = str_dec_to_byte_array(this.proof.challenge);
+            const response = str_dec_to_byte_array(this.proof.response);
 
-        const exp_hom = new arithm.ExpHom(group.pRing, group.getg());
-        let schnorr_proof_verifier = new CryptoSchnorrProof(exp_hom);
+            const exp_hom = new arithm.ExpHom(group.pRing, group.getg());
+            let schnorr_proof_verifier = new CryptoSchnorrProof(exp_hom);
 
-        const verification_result = schnorr_proof_verifier.verifyEG(
-            this.label, 
-            this.instance.toByteTree(), 
-            commitment, 
-            challenge, 
-            response
-        );
+            const verification_result = schnorr_proof_verifier.verifyEG(
+                this.label, 
+                this.instance.toByteTree(), 
+                commitment, 
+                challenge, 
+                response
+            );
 
-        recorder.record(
-            verification_result,
-            this.context(),
-            "SchnorrProof",
-            "The Schnorr proof of knowledge of " + this.proof_title +
-            " should verify"
-        );
+            recorder.record(
+                verification_result,
+                this.context(),
+                "SchnorrProof",
+                "The Schnorr proof of knowledge of " + this.proof_title +
+                " should verify"
+            );
+        } catch(e) {
+            recorder.record(
+                false,
+                this.context(),
+                "SchnorrProof",
+                "Error during Schnorr proof  of " + this.proof_title +
+                " verification: " + e.message
+            );
+        }
     }
 }
