@@ -46,11 +46,9 @@ export function str_dec_to_byte_tree(
         [new Error("Number is too big for encoding"), null];
     }
 
-    // We don't mind having number bigger than tree_size, so that's
-    // why we use Math.Max here.
     // The padding size is otherwise the number of extra zeros we
     // require to have the appropiate number of bytes
-    let padding_size = Math.max(0, tree_size - hex.length / 2);
+    let padding_size = tree_size - hex.length / 2;
     for (var i = 0; i < padding_size; i++) {
         hex = "00" + hex;
     }
@@ -85,13 +83,6 @@ export function str_dec_to_modpgroup_element(
         element = modp_group.toElement(byte_tree as eio.ByteTree);
     } catch(err) {
         return [err, null];
-    }
-
-    // as arithm.ModPGroupElement.toElement() doesn't do this,
-    // we manually ensure that the element is a quadratic 
-    // residue i.e. it's a member of Z^r_p (Gq).
-    if (element.value.legendre(modp_group.modulus) !== 1) {
-        return [new Error("The element is not a quadratic residue"), null];
     }
 
     return [null, element];

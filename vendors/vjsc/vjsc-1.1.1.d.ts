@@ -12,6 +12,7 @@ export declare namespace arithm {
     
     class LargeInteger extends sli.SLI {
         constructor(first: any, second?: any)
+
         equals(other: LargeInteger): boolean
         sum(other: LargeInteger): LargeInteger
         sub(other: LargeInteger): LargeInteger
@@ -19,12 +20,15 @@ export declare namespace arithm {
         mul(other: LargeInteger): LargeInteger
         div(other: LargeInteger): LargeInteger
         mod(other: LargeInteger): LargeInteger
+        
         legendre(prime: LargeInteger): number
         square(): LargeInteger
         modPow(exponent: LargeInteger, modulus: LargeInteger, naive?: boolean): LargeInteger
+
         toHexString(): string
         toByteTree(): eio.ByteTree
         toByteArray(): Uint8Array
+        toByteArrayAlt(): Uint8Array
 
         static ONE: LargeInteger
     }
@@ -35,11 +39,14 @@ export declare namespace arithm {
         randomElement(randomSource: crypto.RandomSource, statDist: number): PRingElement
         getPField(): PField
         getONE(): PRingElement
+        toElement(byteTree: eio.ByteTree | Uint8Array): PRingElement
     }
 
     class PField extends PRing {
         constructor(order: number | LargeInteger)
+
         getPField(): PField
+        toString(): string
     }
 
     class PRingElement extends ArithmObject {
@@ -51,6 +58,7 @@ export declare namespace arithm {
         add(other: PRingElement | LargeInteger): PRingElement
         sub(other: PRingElement | LargeInteger): PRingElement
         inv(): PRingElement
+        toString(): string
     }
 
     class PFieldElement extends PRingElement {
@@ -64,6 +72,10 @@ export declare namespace arithm {
         getONE(): PGroupElement
         getg(): PGroupElement
         getElementOrder(): LargeInteger
+        getEncodeLength(): number
+        toElement(byteTree: eio.ByteTree | Uint8Array): PGroupElement
+        // when PPGroup, we need a bytetree to pass in
+        toElementAlt(byteTree: eio.ByteTree): PGroupElement
     }
     
     class PGroupElement extends ArithmObject {
@@ -74,6 +86,8 @@ export declare namespace arithm {
         exp(exponent: LargeInteger | PRingElement): ModPGroupElement
         inv(): ModPGroupElement
         decode(destination: Uint8Array, startIndex: number): number
+        toByteTree(): eio.ByteTree
+        toByteTreeNoZero(): eio.ByteTree
     }
     
     class PPGroup extends PGroup {
@@ -100,7 +114,7 @@ export declare namespace arithm {
         getONE(): ModPGroupElement
         getg(): ModPGroupElement
         getElementOrder(): LargeInteger
-        toElement(bytes: eio.ByteTree): ModPGroupElement
+        toElement(bytes: eio.ByteTree | Uint8Array): ModPGroupElement
         encode(bytes: Uint8Array, startIndex: number, length: number): ModPGroupElement
     }
     
@@ -108,7 +122,6 @@ export declare namespace arithm {
         value: LargeInteger
         pGroup: ModPGroup
         
-        constructor(pGroup: ModPGroup, value: LargeInteger)
         equals(other: ModPGroupElement): boolean
         mul(factor: ModPGroupElement): ModPGroupElement
         fixed(exponentiations: number): void
@@ -118,11 +131,15 @@ export declare namespace arithm {
 
     class Hom {
         constructor(domain: ArithmObject, range: ArithmObject)
+
         eva(value: ArithmObject): ArithmObject
     }
     class ExpHom extends Hom {
         domain: PRing
+        range: PGroup
+        
         constructor(domain: PRing, basis: PGroupElement)
+
         eva(value: PRingElement): PGroupElement
     }
 }
@@ -130,11 +147,13 @@ export declare namespace arithm {
 export declare namespace crypto {
     class RandomSource {
         constructor()
+
         getBytes(length: number): Uint8Array
     }
 
     class RandomDevice extends RandomSource {
         constructor()
+        
         getBytes(length: number): Uint8Array
     }
 
@@ -152,6 +171,11 @@ export declare namespace crypto {
     
     class SigmaProof extends ZKPoK {
         constructor()
+
+        instanceToByteTree(instance: arithm.PGroupElement): eio.ByteTree
+        byteTreeToCommitment(byteTree: eio.ByteTree): arithm.PGroupElement
+        byteTreeToReply(byteTree: eio.ByteTree): arithm.PRingElement
+        challenge(first: eio.ByteTree, second: crypto.HashFunction): arithm.PRingElement
     }
 
     class SigmaProofPara extends SigmaProof {
@@ -181,18 +205,27 @@ export declare namespace crypto {
     }
 }
 
+
+export declare namespace util {
+    function asciiToByteArray(ascii: string): Uint8Array
+    function byteArrayToAscii(bytes: Uint8Array): string
+    function hexToByteArray(hex: string): Uint8Array
+    function byteArrayToHex(bytes: Uint8Array): string
+    function fill<T>(value: T, width: number): Array<T>
+    function equalsArray(a: Uint8Array, b: Uint8Array): boolean
+}
+
 export declare namespace eio {
     class ByteTree {
         static asByteTree(value: ByteTree | Uint8Array): ByteTree
         static readByteTreeFromByteArray(array: Uint8Array): ByteTree
 
         constructor(value: Uint8Array | ByteTree[] | string)
+        
+        isLeaf(): boolean
+        toByteArray(): Uint8Array
+        toByteArrayRaw(): Uint8Array
+        toPrettyString(): string
     }
 }
 
-export declare namespace util {
-    function asciiToByteArray(ascii: string): Uint8Array
-    function hexToByteArray(hex: string): Uint8Array
-    function byteArrayToAscii(bytes: Uint8Array): string
-    function fill<T>(value: T, width: number): Array<T>    
-}
