@@ -12,7 +12,11 @@ import {
 } from '../crypto/utils';
 import { baseline_parameters as modp_group } from '../crypto/baseline_params';
 import { VCoefficientCommitmentsMatrixRecord, CoefficientCommitmentsMatrix } from './VCoefficientCommitmentsMatrixRecord';
-import { create_joint_public_key } from '../crypto/elgamal_pub_keys';
+import { create_joint_public_key } from '../crypto/elgamal';
+import { 
+    create_base_hash, 
+    create_extended_base_hash 
+} from '../crypto/base_hash';
 
 /**
  * Using the election schemas, returns a correctly initialized Ajv schema
@@ -130,6 +134,31 @@ export class VElectionRecord implements VRecord {
             "The election should use baseline encryption group generator"
         );
 
+        let base_hash = util.hexToByteArray(this.election.base_hash);
+        let extended_base_hash = util.hexToByteArray(
+            this.election.extended_base_hash
+        );
+
+        recorder.record(
+            util.equalsArray(
+                base_hash,
+                create_base_hash()
+            ),
+            this.context(),
+            "ElectionBaseHash",
+            "The election base hash should be correctly computed"
+        );
+
+        recorder.record(
+            util.equalsArray(
+                extended_base_hash,
+                create_extended_base_hash()
+            ),
+            this.context(),
+            "ElectionExtendedBaseHash",
+            "The election extended base hash should be correctly computed"
+        );
+
         // Initialize verification public key records
         let coefficients = (
             (this.election.trustee_public_keys as unknown) as CoefficientCommitmentsMatrix
@@ -138,7 +167,11 @@ export class VElectionRecord implements VRecord {
         try {
             v_coefficients = coefficients
                 .map((pub_key, index) =>
-                    new VCoefficientCommitmentsMatrixRecord(this, pub_key, index + 1)
+                    new VCoefficientCommitmentsMatrixRecord(
+                        this,
+                        pub_key,
+                        base_hash,
+                        index + 1)
                 );
         } catch(err) {
             recorder.record(

@@ -1,9 +1,13 @@
 import { VRecord } from './VRecord';
 import { VRecorder } from '../VRecorder';
-import { SchnorrProof } from 'electionguard-schema-0.85/@types/election_record';
-import { arithm, crypto } from '../../vendors/vjsc/vjsc-1.1.1';
-import { str_dec_to_byte_array } from '../crypto/utils';
+import { arithm, crypto, util, eio } from '../../vendors/vjsc/vjsc-1.1.1';
+import { SchnorrProof } from '../../vendors/electionguard-schema-0.85/@types/election_record';
+import { SchnorrProof as CryptoSchnorrProof } from '../crypto/SchnorrProof';
+import { str_dec_to_byte_array, str_dec_to_byte_tree } from '../crypto/utils';
 
+/**
+ * Verifies a Schnorr Proof record
+ */
 export class VSchnorrProofRecord implements VRecord {
     /// Context of this record
     _context: string[] = [];
@@ -18,13 +22,18 @@ export class VSchnorrProofRecord implements VRecord {
     /// Title of what we are proving, used for text recording purposes
     proof_title: string;
 
+    /// Hash to use as a label in this proof
+    label: Uint8Array;
+
     constructor(
         parent_context: string[], 
+        label: Uint8Array,
         proof: SchnorrProof,
         instance: arithm.ModPGroupElement,
         proof_title: string
     ) {
         this._context = parent_context.slice();
+        this.label = label;
         this.proof = proof;
         this.instance = instance;
         this.proof_title = proof_title;
@@ -34,26 +43,25 @@ export class VSchnorrProofRecord implements VRecord {
         return this._context;
     }
 
+    /// Verify the Schnorr ZKP
     verify(recorder: VRecorder): void {
-        // Verify the Schnorr ZKP
-        let group = this.instance.pGroup;
-        let hom = new arithm.ExpHom(
-            group.pRing, 
-            group.getg()
+        const group = this.instance.pGroup;
+
+        const commitment = str_dec_to_byte_array(this.proof.commitment);
+        const challenge = str_dec_to_byte_array(this.proof.challenge);
+        const response = str_dec_to_byte_array(this.proof.response);
+
+        const exp_hom = new arithm.ExpHom(group.pRing, group.getg());
+        let schnorr_proof_verifier = new CryptoSchnorrProof(exp_hom);
+
+        const verification_result = schnorr_proof_verifier.verifyEG(
+            this.label, 
+            this.instance.toByteTree(), 
+            commitment, 
+            challenge, 
+            response
         );
 
-        let extended_base_hash: Uint8Array = new Uint8Array();
-        // TODO: Proof should be a combination of:
-        // (commitment, reply)
-        let proof: Uint8Array = new Uint8Array();
-
-        let verification_result = new crypto.SchnorrProof(hom)
-            .verify(
-                /*extended_base_hash*/extended_base_hash,
-                this.instance.value.toByteArray(),
-                crypto.sha256,
-                proof
-            );
         recorder.record(
             verification_result,
             this.context(),

@@ -34,15 +34,20 @@ export class VCoefficientCommitmentRecord implements VRecord {
     /// The index of this coefficient commitment
     index: number;
 
+    /// Base hash of the election
+    base_hash: Uint8Array;
+
     constructor(
         parent: VCoefficientCommitmentsMatrixRecord,
         commitment: CoefficcientCommitment,
+        base_hash: Uint8Array,
         index: number
     ) {
         this._context = parent.context().slice();
         this._context.push("Coefficient #" + index + " commitment");
         this.parent = parent;
         this.commitment = commitment;
+        this.base_hash = base_hash;
         this.index = index;
     }
 
@@ -67,6 +72,7 @@ export class VCoefficientCommitmentRecord implements VRecord {
         }
         new VSchnorrProofRecord(
             this.context(), 
+            this.base_hash,
             this.commitment.proof,
             pub_key_el as arithm.ModPGroupElement,
             "Coefficient commitment"

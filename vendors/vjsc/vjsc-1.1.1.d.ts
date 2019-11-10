@@ -172,13 +172,15 @@ export declare namespace crypto {
     class SigmaProof extends ZKPoK {
         constructor()
 
-        instanceToByteTree(instance: arithm.PGroupElement): eio.ByteTree
+        instanceToByteTree(instance: arithm.PGroupElement | arithm.PGroupElement[]): eio.ByteTree
         byteTreeToCommitment(byteTree: eio.ByteTree): arithm.PGroupElement
         byteTreeToReply(byteTree: eio.ByteTree): arithm.PRingElement
         challenge(first: eio.ByteTree, second: crypto.HashFunction): arithm.PRingElement
     }
 
     class SigmaProofPara extends SigmaProof {
+        sigmaProofs: SigmaProof[]
+
         constructor(sigmaProofs: SigmaProof[])
     }
 
@@ -187,6 +189,8 @@ export declare namespace crypto {
     }
     
     class SchnorrProof extends SigmaProof {
+        homomorphism: arithm.ExpHom
+
         constructor(homomorphism: arithm.Hom)
     }
 
@@ -221,7 +225,7 @@ export declare namespace eio {
         static readByteTreeFromByteArray(array: Uint8Array): ByteTree
 
         constructor(value: Uint8Array | ByteTree[] | string)
-        
+
         isLeaf(): boolean
         toByteArray(): Uint8Array
         toByteArrayRaw(): Uint8Array

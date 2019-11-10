@@ -49,6 +49,9 @@ export class VCoefficientCommitmentsMatrixRecord implements VRecord {
     /// Context of this record
     _context: string[] = [];
 
+    /// Base hash of the election
+    base_hash: Uint8Array;
+
     /**
      * Constructor of the coefficient commitments matrix record.
      * 
@@ -59,10 +62,12 @@ export class VCoefficientCommitmentsMatrixRecord implements VRecord {
     constructor(
         parent: VElectionRecord,
         commitments: CoefficientCommitments,
+        base_hash: Uint8Array,
         trustee_index: number
     ) {
         this.parent = parent;
         this.commitments = commitments;
+        this.base_hash = base_hash;
         this.trustee_index = trustee_index;
         this._context = parent.context().slice();
         this._context.push("Trustee #" + trustee_index +" public keys");
@@ -102,6 +107,7 @@ export class VCoefficientCommitmentsMatrixRecord implements VRecord {
                 new VCoefficientCommitmentRecord(
                     this,
                     commitment,
+                    this.base_hash,
                     index
                 )
             )

@@ -29,7 +29,7 @@ export function str_dec_to_byte_array(
  * 
  * @param dec_li_str A decimal large integer number either as a string
  *                   or as a native typescript number.
- * @param tree_size Required size in bytes of the returned bytree
+ * @param tree_size Required size in bytes of the returned ByteTree
  */
 export function str_dec_to_byte_tree(
     dec_li_str: string | number,
