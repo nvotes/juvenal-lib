@@ -2,15 +2,15 @@ import { VRecord } from './VRecord';
 import { VRecorder } from '../VRecorder';
 import { arithm, crypto, util, eio } from '../../vendors/vjsc/vjsc-1.1.1';
 import { EncryptedBallot } from '../../vendors/electionguard-schema-0.85/@types/election_record';
-import { str_dec_to_byte_array, str_dec_to_byte_tree } from '../crypto/utils';
+import { strDecToByteArray, strDecToByteTree } from '../crypto/utils';
 
 export class VContestInfo {
-    num_selections: number;
-    max_selections: number;
+    numSelections: number;
+    maxSelections: number;
 
-    constructor(num_selections: number, max_selections: number) {
-        this.num_selections = num_selections;
-        this.max_selections = max_selections;
+    constructor(numSelections: number, maxSelections: number) {
+        this.numSelections = numSelections;
+        this.maxSelections = maxSelections;
     }
 }
 
@@ -19,36 +19,32 @@ export class VContestInfo {
  */
 export class VEncryptedBallotRecord implements VRecord {
     /// Context of this record
-    _context: string[] = [];
+    context: string[] = [];
 
     /// The record data
-    encrypted_ballot: EncryptedBallot;
+    encryptedBallot: EncryptedBallot;
 
     /// Number of selections for each contest
-    contest_info_array: VContestInfo[];
+    contestInfoArray: VContestInfo[];
 
     /**
      * Constructs the verification record object
      * 
      * @param context 
-     * @param encrypted_ballot 
-     * @param contest_info_array
+     * @param encryptedBallot 
+     * @param contestInfoArray
      * @param index 
      */
     constructor(
         parent_context: string[],
-        encrypted_ballot: EncryptedBallot,
-        contest_info_array: VContestInfo[],
+        encryptedBallot: EncryptedBallot,
+        contestInfoArray: VContestInfo[],
         index: number
     ) {
-        this._context = parent_context.slice();
-        this._context.push("Cast Ballot #" + index);
-        this.encrypted_ballot = encrypted_ballot;
-        this.contest_info_array = contest_info_array;
-    }
-
-    context(): string[] {
-        return this._context;
+        this.context = parent_context.slice();
+        this.context.push("Cast Ballot #" + index);
+        this.encryptedBallot = encryptedBallot;
+        this.contestInfoArray = contestInfoArray;
     }
 
     /// Verify the record
@@ -62,22 +58,22 @@ export class VEncryptedBallotRecord implements VRecord {
         - All the ballots for each device are consecutive. (not yet verifiable)
         */
        recorder.record(
-            this.encrypted_ballot.contests.length == this.contest_info_array.length,
-            this.context(),
+            this.encryptedBallot.contests.length == this.contestInfoArray.length,
+            this.context,
             "CastBallotNumberOfContests",
             "The number of contests inside the ballot matches the defined " +
             "in the election"
         );
 
-        this.encrypted_ballot.contests.map((contest, index) => {
-            const contest_info = this.contest_info_array[index];
-            let context = this._context.slice();
+        this.encryptedBallot.contests.map((contest, index) => {
+            const contestInfo = this.contestInfoArray[index];
+            let context = this.context.slice();
             context.push("Contest #" + index);
 
             recorder.record(
                 (
-                    contest_info !== undefined && 
-                    contest.selections.length == contest_info.num_selections
+                    contestInfo !== undefined && 
+                    contest.selections.length == contestInfo.numSelections
                 ),
                 context,
                 "CastBallotNumberOfSelections",
@@ -86,7 +82,7 @@ export class VEncryptedBallotRecord implements VRecord {
             );
 
             recorder.record(
-                contest.max_selections == contest_info.max_selections,
+                contest.max_selections == contestInfo.maxSelections,
                 context,
                 "CastBallotMaxSelections",
                 "The maximum number of selections matches the " +

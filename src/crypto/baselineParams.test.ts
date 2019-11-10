@@ -1,6 +1,6 @@
 import { arithm, crypto, util } from '../../vendors/vjsc/vjsc-1.1.1';
-import { str_dec_to_hex, remove_spaces } from './utils';
-import { baseline_parameters } from './baseline_params';
+import { strDecToHex, removeSpaces } from './utils';
+import { baselineParameters } from './baselineParams';
 
 /// Order q multiplicative subgroup of Z^*_p (Gq) as specified in the 
 /// [ElectionGuard specification (V0.85)](https://raw.githubusercontent.com/microsoft/ElectionGuard-SDK-Specification/master/Informal/ElectionGuardSpecificationV0.85.pdf).
@@ -9,13 +9,13 @@ import { baseline_parameters } from './baseline_params';
 /// q = 2^256 - 189
 ///
 /// Here we verify that formula
-test('verify_prime_q', () => {
-    let q = baseline_parameters.getElementOrder();
-    let q_calculated = new arithm.LargeInteger(
+test('verifyPrimeQ', () => {
+    const q = baselineParameters.getElementOrder();
+    const qCalculated = new arithm.LargeInteger(
         (BigInt(2) ** BigInt(256) - BigInt(189)).toString(16)
     );
 
-    expect(q.equals(q_calculated)).toBe(true);
+    expect(q.equals(qCalculated)).toBe(true);
   });
   
 /// Modulus p of the multiplicative subgroup of Z^*_p (Gq) as specified 
@@ -26,9 +26,9 @@ test('verify_prime_q', () => {
 /// p = 2^4096 - 69*q - 2650872664557734482243044168410288960
 ///
 /// Here we verify that formula
-test('verify_prime_p', () => {
-    let q = BigInt("0x"+baseline_parameters.getElementOrder().toHexString());
-    let p_calculated = new arithm.LargeInteger(
+test('verifyPrimeP', () => {
+    const q = BigInt("0x"+baselineParameters.getElementOrder().toHexString());
+    const pCalculated = new arithm.LargeInteger(
         (
             BigInt(2) ** BigInt(4096) 
             - BigInt(69) * q
@@ -37,7 +37,7 @@ test('verify_prime_p', () => {
         .toString(16)
     );
 
-    expect(baseline_parameters.modulus.equals(p_calculated)).toBe(true);
+    expect(baselineParameters.modulus.equals(pCalculated)).toBe(true);
   });
 
 /// Generator G of the multiplicative subgroup of Z^*_p (Gq) as specified 
@@ -48,11 +48,11 @@ test('verify_prime_p', () => {
 /// g = 2^r (mod p)
 ///
 /// Here we verify that formula
-test('verify_generator_g', () => {
-    let q = baseline_parameters.getElementOrder();
-    let p = baseline_parameters.modulus;
-    let r = p.sub(arithm.LargeInteger.ONE).div(q);
-    let calculated_g = new arithm.LargeInteger("2").modPow(r, p);
+test('verifyGeneratorG', () => {
+    const q = baselineParameters.getElementOrder();
+    const p = baselineParameters.modulus;
+    const r = p.sub(arithm.LargeInteger.ONE).div(q);
+    const calculatedG = new arithm.LargeInteger("2").modPow(r, p);
 
-    expect(baseline_parameters.getg().value.equals(calculated_g)).toBe(true);
+    expect(baselineParameters.getg().value.equals(calculatedG)).toBe(true);
   });

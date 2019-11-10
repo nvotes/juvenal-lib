@@ -7,7 +7,7 @@ import {
 } from 'electionguard-schema-0.85/@types/election_record';
 import { arithm } from 'vjsc/vjsc-1.1.1';
 import { VCoefficientCommitmentsMatrixRecord } from './VCoefficientCommitmentsMatrixRecord';
-import { str_dec_to_modpgroup_element } from '../crypto/utils';
+import { strDecToModPGroupElement, isError } from '../crypto/utils';
 
 /**
  * Represents a polynomial coefficient commitment in the schema.
@@ -23,7 +23,7 @@ export type CoefficcientCommitment = {
 
 export class VCoefficientCommitmentRecord implements VRecord {
     /// Context of this record
-    _context: string[] = [];
+    context: string[] = [];
 
     /// Parent record
     parent: VCoefficientCommitmentsMatrixRecord;
@@ -35,47 +35,45 @@ export class VCoefficientCommitmentRecord implements VRecord {
     index: number;
 
     /// Base hash of the election
-    base_hash: Uint8Array;
+    baseHash: Uint8Array;
 
     constructor(
         parent: VCoefficientCommitmentsMatrixRecord,
         commitment: CoefficcientCommitment,
-        base_hash: Uint8Array,
+        baseHash: Uint8Array,
         index: number
     ) {
-        this._context = parent.context().slice();
-        this._context.push("Coefficient #" + index + " commitment");
+        this.context = parent.context.slice();
+        this.context.push("Coefficient #" + index + " commitment");
         this.parent = parent;
         this.commitment = commitment;
-        this.base_hash = base_hash;
+        this.baseHash = baseHash;
         this.index = index;
-    }
-
-    context(): string[] {
-        return this._context;
     }
 
     verify(recorder: VRecorder): void {
         // Verify the Schnorr ZKP
-        let group = this.parent.parent.modp_group();
-        let [err, pub_key_el] = str_dec_to_modpgroup_element(
+        const group = this.parent.parent.modPGroup();
+        const publicKeyElement = strDecToModPGroupElement(
             this.commitment.public_key,
             group
         );
-        if (err !== null) {
+        if (isError(publicKeyElement)) {
+            const error = publicKeyElement;
             recorder.record(
                 false,
-                this.context(),
-                "CoefficientCommitmentVerification",
-                "Error loading the coefficient commitment: " + err.message
+                this.context,
+                "CoefficientCommitmentLoading",
+                "Error loading the coefficient commitment: " + error.message
             );
+        } else {
+            new VSchnorrProofRecord(
+                this.context, 
+                this.baseHash,
+                this.commitment.proof,
+                publicKeyElement,
+                "Polynomial Coefficient"
+            ).verify(recorder);
         }
-        new VSchnorrProofRecord(
-            this.context(), 
-            this.base_hash,
-            this.commitment.proof,
-            pub_key_el as arithm.ModPGroupElement,
-            "Polynomial Coefficient"
-        ).verify(recorder);
     }
 }

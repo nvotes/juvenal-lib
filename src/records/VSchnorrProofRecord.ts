@@ -3,14 +3,14 @@ import { VRecorder } from '../VRecorder';
 import { arithm, crypto, util, eio } from '../../vendors/vjsc/vjsc-1.1.1';
 import { SchnorrProof } from '../../vendors/electionguard-schema-0.85/@types/election_record';
 import { SchnorrProof as CryptoSchnorrProof } from '../crypto/SchnorrProof';
-import { str_dec_to_byte_array, str_dec_to_byte_tree } from '../crypto/utils';
+import { strDecToByteArray, strDecToByteTree } from '../crypto/utils';
 
 /**
  * Verifies a Schnorr Proof record
  */
 export class VSchnorrProofRecord implements VRecord {
     /// Context of this record
-    _context: string[] = [];
+    context: string[] = [];
 
     /// The record data
     proof: SchnorrProof;
@@ -20,27 +20,23 @@ export class VSchnorrProofRecord implements VRecord {
     instance: arithm.ModPGroupElement;
 
     /// Title of what we are proving, used for text recording purposes
-    proof_title: string;
+    proofTitle: string;
 
     /// Hash to use as a label in this proof
     label: Uint8Array;
 
     constructor(
-        parent_context: string[], 
+        parentContext: string[], 
         label: Uint8Array,
         proof: SchnorrProof,
         instance: arithm.ModPGroupElement,
-        proof_title: string
+        proofTitle: string
     ) {
-        this._context = parent_context.slice();
+        this.context = parentContext.slice();
         this.label = label;
         this.proof = proof;
         this.instance = instance;
-        this.proof_title = proof_title;
-    }
-
-    context(): string[] {
-        return this._context;
+        this.proofTitle = proofTitle;
     }
 
     /// Verify the Schnorr ZKP
@@ -49,14 +45,14 @@ export class VSchnorrProofRecord implements VRecord {
 
         // wrapped in a try-catch because deserialization could fail
         try {
-            const commitment = str_dec_to_byte_array(this.proof.commitment);
-            const challenge = str_dec_to_byte_array(this.proof.challenge);
-            const response = str_dec_to_byte_array(this.proof.response);
+            const commitment = strDecToByteArray(this.proof.commitment);
+            const challenge = strDecToByteArray(this.proof.challenge);
+            const response = strDecToByteArray(this.proof.response);
 
-            const exp_hom = new arithm.ExpHom(group.pRing, group.getg());
-            let schnorr_proof_verifier = new CryptoSchnorrProof(exp_hom);
+            const expHom = new arithm.ExpHom(group.pRing, group.getg());
+            const schnorrProofVerifier = new CryptoSchnorrProof(expHom);
 
-            const verification_result = schnorr_proof_verifier.verifyEG(
+            const verificationResult = schnorrProofVerifier.verifyEG(
                 this.label, 
                 this.instance.toByteTree(), 
                 commitment, 
@@ -65,19 +61,19 @@ export class VSchnorrProofRecord implements VRecord {
             );
 
             recorder.record(
-                verification_result,
-                this.context(),
+                verificationResult,
+                this.context,
                 "SchnorrProof",
-                "The Schnorr proof of knowledge of " + this.proof_title +
+                "The Schnorr proof of knowledge of " + this.proofTitle +
                 " should verify"
             );
-        } catch(e) {
+        } catch(error) {
             recorder.record(
                 false,
-                this.context(),
+                this.context,
                 "SchnorrProof",
-                "Error during Schnorr proof  of " + this.proof_title +
-                " verification: " + e.message
+                "Error during Schnorr proof  of " + this.proofTitle +
+                " verification: " + error.message
             );
         }
     }

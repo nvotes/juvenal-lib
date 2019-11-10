@@ -6,7 +6,7 @@ import { util } from "../../vendors/vjsc/vjsc-1.1.1";
  * NOTE: We currently have not implemented this to be compatible with current
  * version of the ElectionGuard SDK, which has not implemented it yet either.
  */
-export function create_base_hash(): Uint8Array {
+export function createBaseHash(): Uint8Array {
     return util.hexToByteArray("0");
 }
 
@@ -16,6 +16,6 @@ export function create_base_hash(): Uint8Array {
  * NOTE: We currently have not implemented this to be compatible with current
  * version of the ElectionGuard SDK, which has not implemented it yet either.
  */
-export function create_extended_base_hash(): Uint8Array {
+export function createExtendedBaseHash(): Uint8Array {
     return util.hexToByteArray("0");
 }

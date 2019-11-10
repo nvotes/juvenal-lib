@@ -4,6 +4,11 @@
  */
 export interface VRecorder {
     /**
+     * Returns wether there was any verification that failed
+     */
+    readonly hasFailures: boolean;
+
+    /**
      * Record a verification. 
      * 
      * Note that multiple calls with the same verification id could happen, but
@@ -22,9 +27,4 @@ export interface VRecorder {
         name: string,
         title: string
     ): void;
-
-    /**
-     * Returns wether there was any verification that failed
-     */
-    has_failures(): boolean;
 }

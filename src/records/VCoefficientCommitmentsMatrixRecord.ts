@@ -6,7 +6,7 @@ import {
     SchnorrProof 
 } from 'electionguard-schema-0.85/@types/election_record';
 import { arithm, util } from '../../vendors/vjsc/vjsc-1.1.1';
-import { str_dec_to_modpgroup_element } from '../crypto/utils';
+import { strDecToModPGroupElement, isError } from '../crypto/utils';
 import { 
     CoefficcientCommitment,
     VCoefficientCommitmentRecord
@@ -40,53 +40,50 @@ export class VCoefficientCommitmentsMatrixRecord implements VRecord {
     commitments: CoefficientCommitments;
 
     /// Number of the trustee, starting with 1
-    trustee_index: number;
+    trusteeIndex: number;
 
     /// First coefficient of the trustee, which corresponds with the
     /// public key of the trustee.
-    first_coefficient_el: arithm.ModPGroupElement;
+    firstCoefficientElement: arithm.ModPGroupElement;
 
     /// Context of this record
-    _context: string[] = [];
+    context: string[] = [];
 
     /// Base hash of the election
-    base_hash: Uint8Array;
+    baseHash: Uint8Array;
 
     /**
      * Constructor of the coefficient commitments matrix record.
      * 
      * @param parent Parent election record
      * @param commitments list of polynomial coefficient commitments
-     * @param trustee_index Number of the trustee, starting with 1
+     * @param trusteeIndex Number of the trustee, starting with 1
      */
     constructor(
         parent: VElectionRecord,
         commitments: CoefficientCommitments,
-        base_hash: Uint8Array,
-        trustee_index: number
+        baseHash: Uint8Array,
+        trusteeIndex: number
     ) {
         this.parent = parent;
         this.commitments = commitments;
-        this.base_hash = base_hash;
-        this.trustee_index = trustee_index;
-        this._context = parent.context().slice();
-        this._context.push("Trustee #" + trustee_index +" public keys");
+        this.baseHash = baseHash;
+        this.trusteeIndex = trusteeIndex;
+        this.context = parent.context.slice();
+        this.context.push("Trustee #" + trusteeIndex +" public keys");
 
         /// Load the first coefficient group element, which is the public key
-        let [err, element] = str_dec_to_modpgroup_element(
+        const element = strDecToModPGroupElement(
             commitments[0].public_key,
-            this.parent.modp_group()
+            this.parent.modPGroup()
         );
-        if (err !== null) {
-            throw err;
+        if (isError(element)) {
+            const error: Error = element;
+            throw error;
         }
-        this.first_coefficient_el = element as arithm.ModPGroupElement;
+        this.firstCoefficientElement = element;
     }
 
-    context(): string[] {
-        return this._context;
-    }
-    
     verify(recorder: VRecorder): void {
         recorder.record(
             // A degree n polynomial is uniquely determined by n + 1 points
@@ -94,7 +91,7 @@ export class VCoefficientCommitmentsMatrixRecord implements VRecord {
             // Therefore number of coefficients = threshold (degree n has n + 1
             // coefficients)
             this.commitments.length === this.parent.election.parameters.threshold,
-            this.context(),
+            this.context,
             "NumberOfCoefficients",
             "The number of coefficients (" +  this.commitments.length +
              ") should be equal to the decryption threhold (" + 
@@ -107,10 +104,10 @@ export class VCoefficientCommitmentsMatrixRecord implements VRecord {
                 new VCoefficientCommitmentRecord(
                     this,
                     commitment,
-                    this.base_hash,
+                    this.baseHash,
                     index
                 )
             )
-            .map((v_coefficient) => v_coefficient.verify(recorder));
+            .map((vCoefficient) => vCoefficient.verify(recorder));
     }
 }

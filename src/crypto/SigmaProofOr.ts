@@ -7,7 +7,7 @@ import { SchnorrProof } from './SchnorrProof'
  */
 class SigmaProofOr extends crypto.SigmaProofOr {
     constructor(challengeSpace: arithm.PRing, proofs: SchnorrProof[]) {
-        super(challengeSpace, proofs)
+        super(challengeSpace, proofs);
     }
     
     instanceToByteTree(instances: arithm.PGroupElement[]): eio.ByteTree {

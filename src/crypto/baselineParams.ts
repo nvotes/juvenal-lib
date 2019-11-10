@@ -1,5 +1,5 @@
 import { arithm } from '../../vendors/vjsc/vjsc-1.1.1';
-import { remove_spaces } from './utils';
+import { removeSpaces } from './utils';
 
 /// Order q multiplicative subgroup of Z^*_p (Gq) as specified in the 
 /// [ElectionGuard specification (V0.85)](https://raw.githubusercontent.com/microsoft/ElectionGuard-SDK-Specification/master/Informal/ElectionGuardSpecificationV0.85.pdf).
@@ -7,7 +7,7 @@ import { remove_spaces } from './utils';
 ///
 /// q = 2^256 - 189
 ///
-/// We check that that formula in unit test "verify_prime_q".
+/// We check that that formula in unit test "verifyPrimeQ".
 export const PRIME_Q_HEX = 
 "FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFF43";
 
@@ -18,7 +18,7 @@ export const PRIME_Q_HEX =
 ///
 /// p = 2^4096 - 69*q - 2650872664557734482243044168410288960
 ///
-/// We check that that formula in unit test "verify_prime_p".
+/// We check that that formula in unit test "verifyPrimeP".
 export const PRIME_P_HEX = 
 "FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF" +
 "FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF" +
@@ -44,7 +44,7 @@ export const PRIME_P_HEX =
 ///
 /// g = 2^r (mod p)
 ///
-/// We check that that formula in unit test "verify_generator_g".
+/// We check that that formula in unit test "verifyGeneratorG".
 export const GENERATOR_G_HEX = 
 "9B61C275 E06F3E38 372F9A9A DE0CDC4C 82F4CE53 37B3EF0E D28BEDBC 01342EB8" +
 "9977C811 6D741270 D45B0EBE 12D96C5A EE997FEF DEA18569 018AFE12 84E702BB" +
@@ -66,9 +66,9 @@ export const GENERATOR_G_HEX =
 /**
  * These are the baseline parameters, defined in ElectionGuard spec.
  */
-export const baseline_parameters: arithm.ModPGroup = new arithm.ModPGroup(
-    new arithm.LargeInteger(remove_spaces(PRIME_P_HEX)),
-    new arithm.LargeInteger(remove_spaces(PRIME_Q_HEX)),
-    new arithm.LargeInteger(remove_spaces(GENERATOR_G_HEX)),
+export const baselineParameters: arithm.ModPGroup = new arithm.ModPGroup(
+    new arithm.LargeInteger(removeSpaces(PRIME_P_HEX)),
+    new arithm.LargeInteger(removeSpaces(PRIME_Q_HEX)),
+    new arithm.LargeInteger(removeSpaces(GENERATOR_G_HEX)),
     1 // encoding=1 means 'safe prime encoding'
 );

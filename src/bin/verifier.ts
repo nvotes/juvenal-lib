@@ -5,8 +5,8 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
-import { exit_error_string, exit_error} from '../errors';
-import { verify_election_record } from '../verify';
+import { exitErrorString, exitError} from '../errors';
+import { verifyElectionRecord } from '../verify';
 import { CLIRecorder } from '../CLIRecorder';
 
 main(process.argv);
@@ -20,23 +20,23 @@ main(process.argv);
  */
 function main(argv: string[]) {
   if (argv.length < 3) {
-    exit_error_string(
+    exitErrorString(
       "Please specify path to election record file.\n\n" +
       "Usage: node verify.js <path-to-election-record-file>"
     );
   }
-  let election_record_path = argv[2];
+  const electionRecordPath = argv[2];
 
   // Try to read the election record file
-  fs.readFile(election_record_path, 'utf8', (err, data) => {
+  fs.readFile(electionRecordPath, 'utf8', (error, data) => {
     // couldn't read the file for some reason
-    if (err) {
-      exit_error_string(
-        "Couldn't read election record file '" + election_record_path + "'"
+    if (error) {
+      exitErrorString(
+        "Couldn't read election record file '" + electionRecordPath + "'"
       );
     }
 
-    let recorder = new CLIRecorder();
-    verify_election_record(data, exit_error, recorder);
+    const recorder = new CLIRecorder();
+    verifyElectionRecord(data, exitError, recorder);
   })
 }

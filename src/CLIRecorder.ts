@@ -9,10 +9,10 @@ import { VRecorder } from './VRecorder';
  * stdout and records if there was any failure.
  */
 export class CLIRecorder implements VRecorder {
-    _has_failures: boolean;
+    hasFailures: boolean;
 
     constructor() { 
-        this._has_failures = false; 
+        this.hasFailures = false; 
     }
     
     record(
@@ -21,14 +21,10 @@ export class CLIRecorder implements VRecorder {
         name: string,
         title: string
     ): void {
-        this._has_failures = this._has_failures || !status;
+        this.hasFailures = this.hasFailures || !status;
 
-        let stat2str = (status: boolean): string => (status) ? "OK:  " : "FAIL:";
+        const stat2str = (status: boolean): string => (status) ? "OK:  " : "FAIL:";
         const prefix = context.join(", ");
         console.log(stat2str(status) + " " + prefix + " | " + name + ": " + title);
-    }
-
-    has_failures(): boolean {
-        return this._has_failures;
     }
 }

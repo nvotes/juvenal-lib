@@ -6,7 +6,7 @@ export class RecoverableError extends Error {};
  * 
  * @param error error to be shown
  */
-export function exit_error(error: Error) {
+export function exitError(error: Error) {
     console.error(error.name + " " + error.message);
     process.exit(1);
 }
@@ -16,7 +16,7 @@ export function exit_error(error: Error) {
  * 
  * @param error error to be shown
  */
-export function exit_error_string(error_string: String) {
-    console.error("ERROR: " + error_string);
+export function exitErrorString(errorString: String) {
+    console.error("ERROR: " + errorString);
     process.exit(1);
 }
