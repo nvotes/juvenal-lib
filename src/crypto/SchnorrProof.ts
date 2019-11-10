@@ -1,5 +1,9 @@
 import { arithm, crypto, eio } from '../../vendors/vjsc/vjsc-1.1.1';
 
+/**
+ * Implements a vjsc Schnorr Proof that can be loaded and verified from 
+ * ElectionGuard code.
+ */
 export class SchnorrProof extends crypto.SchnorrProof {
     constructor(homomorphism: arithm.ExpHom) {
         super(homomorphism)

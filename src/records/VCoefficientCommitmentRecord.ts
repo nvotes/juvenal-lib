@@ -75,7 +75,7 @@ export class VCoefficientCommitmentRecord implements VRecord {
             this.base_hash,
             this.commitment.proof,
             pub_key_el as arithm.ModPGroupElement,
-            "Coefficient commitment"
+            "Polynomial Coefficient"
         ).verify(recorder);
     }
 }

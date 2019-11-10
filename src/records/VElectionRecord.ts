@@ -1,7 +1,10 @@
 import Ajv from 'ajv';
 
 import { arithm, crypto, util } from "../../vendors/vjsc/vjsc-1.1.1";
-import { ElectionRecord } from '../../vendors/electionguard-schema-0.85/@types/election_record';
+import { 
+    ElectionRecord,
+    EncryptedBallot
+} from '../../vendors/electionguard-schema-0.85/@types/election_record';
 import { schemas } from '../../vendors/electionguard-schema-0.85/json_schemas';
 
 import { VRecord } from './VRecord';
@@ -11,12 +14,16 @@ import {
     str_dec_to_modpgroup_element
 } from '../crypto/utils';
 import { baseline_parameters as modp_group } from '../crypto/baseline_params';
-import { VCoefficientCommitmentsMatrixRecord, CoefficientCommitmentsMatrix } from './VCoefficientCommitmentsMatrixRecord';
+import { 
+    VCoefficientCommitmentsMatrixRecord,
+    CoefficientCommitmentsMatrix 
+} from './VCoefficientCommitmentsMatrixRecord';
 import { create_joint_public_key } from '../crypto/elgamal';
 import { 
     create_base_hash, 
     create_extended_base_hash 
 } from '../crypto/base_hash';
+import { VEncryptedBallotRecord, VContestInfo } from './VEncryptedBallotRecord';
 
 /**
  * Using the election schemas, returns a correctly initialized Ajv schema
@@ -160,12 +167,9 @@ export class VElectionRecord implements VRecord {
         );
 
         // Initialize verification public key records
-        let coefficients = (
-            (this.election.trustee_public_keys as unknown) as CoefficientCommitmentsMatrix
-        );
         let v_coefficients: VCoefficientCommitmentsMatrixRecord[] = [];
         try {
-            v_coefficients = coefficients
+            v_coefficients = this.election.trustee_public_keys
                 .map((pub_key, index) =>
                     new VCoefficientCommitmentsMatrixRecord(
                         this,
@@ -216,5 +220,30 @@ export class VElectionRecord implements VRecord {
 
         // Verify coefficient records
         v_coefficients.map((v_coefficient) => v_coefficient.verify(recorder));
+
+        // TODO: get contest selections from ballot coding file. Currently
+        // not being included in the election record, so we infer this data from
+        // the first cast ballot.
+        let contest_info_array: VContestInfo[] = [];
+        if (this.election.cast_ballots.length > 0) {
+            contest_info_array = this.election.cast_ballots[0]
+                .contests
+                .map((contest) => new VContestInfo(
+                    contest.selections.length,
+                    contest.max_selections
+                ));
+        }
+
+        // Initialize and verify cast ballots
+        let v_cast_ballots = this.election.cast_ballots
+            .map((cast_ballot, index) =>
+                new VEncryptedBallotRecord(
+                    this.context(),
+                    cast_ballot,
+                    contest_info_array,
+                    index
+                )
+            );
+        v_cast_ballots.map((v_cast_ballot) => v_cast_ballot.verify(recorder));
     }
 }
