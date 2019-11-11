@@ -87,10 +87,10 @@ export declare namespace arithm {
     class PGroupElement extends ArithmObject {
         constructor(pGroup: PGroup)
         equals(other: PGroupElement): boolean
-        mul(factor: ModPGroupElement): ModPGroupElement
+        mul(factor: PGroupElement): PGroupElement
         fixed(exponentiations: number): void
         exp(exponent: LargeInteger | PRingElement): ModPGroupElement
-        inv(): ModPGroupElement
+        inv(): PGroupElement
         decode(destination: Uint8Array, startIndex: number): number
         toByteTree(): eio.ByteTree
         toByteTreeNoZero(): eio.ByteTree
@@ -104,6 +104,7 @@ export declare namespace arithm {
 
     class PPGroupElement extends PGroupElement {
         constructor(pPGroup: PPGroup, values: LargeInteger[])
+        mul(factor: PPGroupElement): PPGroupElement
         project(i: number): PGroupElement
     }
     

@@ -21,12 +21,7 @@ export function sum(
     ppGroup: arithm.PPGroup
 ): arithm.PPGroupElement {
     return ciphertexts.reduce(
-        // We have to do this typing mess because of the typing mess of 
-        // that is typescript
-        (encryptedSum, ciphertext) =>
-            (encryptedSum.mul(
-                (ciphertext as unknown) as arithm.ModPGroupElement
-            ) as unknown) as arithm.PPGroupElement,
+        (encryptedSum, ciphertext) => encryptedSum.mul(ciphertext),
         ppGroup.getONE() as arithm.PPGroupElement
     );
 }
