@@ -52,7 +52,7 @@ export class VSchnorrProofRecord implements VRecord {
             const expHom = new arithm.ExpHom(group.pRing, group.getg());
             const schnorrProofVerifier = new CryptoSchnorrProof(expHom);
 
-            const verificationResult = schnorrProofVerifier.verifyEG(
+            const verificationResult = schnorrProofVerifier.verifyElectionGuard(
                 this.label, 
                 this.instance.toByteTree(), 
                 commitment, 

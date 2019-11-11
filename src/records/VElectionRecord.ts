@@ -237,16 +237,21 @@ export class VElectionRecord implements VRecord {
                 ));
         }
 
+
         // Initialize and verify cast ballots
-        const vCastBallots = this.election.cast_ballots
-            .map((castBallot, index) =>
-                new VEncryptedBallotRecord(
-                    this.context,
-                    castBallot,
-                    contestInfoArray,
-                    index
-                )
-            );
-        vCastBallots.map((vCastBallot) => vCastBallot.verify(recorder));
+        if (!isError(jointPublicKey)) {
+            const vCastBallots = this.election.cast_ballots
+                .map((castBallot, index) =>
+                    new VEncryptedBallotRecord(
+                        this.context,
+                        extendedBaseHash,
+                        castBallot,
+                        contestInfoArray,
+                        jointPublicKey,
+                        index
+                    )
+                );
+            vCastBallots.map((vCastBallot) => vCastBallot.verify(recorder));
+        }
     }
 }

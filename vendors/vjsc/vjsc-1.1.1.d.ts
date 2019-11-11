@@ -33,7 +33,10 @@ export declare namespace arithm {
         static ONE: LargeInteger
     }
 
-    class PRing extends ArithmObject{
+    class PRing extends ArithmObject {
+        bitLength: number
+        byteLength: number
+
         constructor()
 
         randomElement(randomSource: crypto.RandomSource, statDist: number): PRingElement
@@ -43,6 +46,9 @@ export declare namespace arithm {
     }
 
     class PField extends PRing {
+        bitLength: number
+        byteLength: number
+
         constructor(order: number | LargeInteger)
 
         getPField(): PField

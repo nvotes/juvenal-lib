@@ -23,6 +23,23 @@ export function isError(obj: any | Error): obj is Error {
 }
 
 /**
+ * Returns the first error of the list or an empty error, but always
+ * an error. This is useful if we have a lot of errors, to get the
+ * first of them.
+ * 
+ * @param list list of errors
+ */
+export function firstError(list: (any | Error)[]): Error {
+    const empty_error = new Error();
+    for (const error of list) {
+        if (isError(error)) {
+            return error;
+        }
+    }
+    return empty_error;
+}
+
+/**
  * Receives a string of a number in decimal base and returns it in 
  * hexadecimal base, also as a string.
  * 
@@ -105,6 +122,40 @@ export function strDecToModPGroupElement(
     let element: arithm.ModPGroupElement;
     try {
         element = modPGroup.toElement(byteTree);
+    } catch(error) {
+        return error;
+    }
+
+    return element;
+}
+
+/**
+ * Converts a number as a string into a PRingElement.
+ * 
+ * @param decLiStr A decimal large integer number either as a string
+ *                   or as a native typescript number.
+ * @param ring The ring to be used.
+ */
+export function strDecToPRingElement(
+    decLiStr: string | number,
+    ring: arithm.PRing
+): arithm.PRingElement | Error
+{
+    // First convert it to byte tree, dealing with errors if any
+    let byteTree = strDecToByteTree(
+        decLiStr,
+        ring.byteLength
+    );
+
+    if (isError(byteTree)) { 
+        const error: Error = byteTree;
+        return error;
+    } 
+        
+    // Then convert it to a group element, dealing with errors if any
+    let element: arithm.PRingElement;
+    try {
+        element = ring.toElement(byteTree);
     } catch(error) {
         return error;
     }

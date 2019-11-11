@@ -22,10 +22,11 @@ export class SchnorrProof extends crypto.SchnorrProof {
         return this.homomorphism.range.toElementAlt(byteTree);
     }
 
-    verifyEG(label: Uint8Array, instance: eio.ByteTree, 
+    verifyElectionGuard(label: Uint8Array, instance: eio.ByteTree, 
         commitment: Uint8Array | eio.ByteTree, 
-        challenge: Uint8Array, response: Uint8Array | eio.ByteTree): boolean {
-        
+        challenge: Uint8Array, 
+        response: Uint8Array | eio.ByteTree
+    ): boolean {    
         const instanceElement = this.homomorphism.range.toElementAlt(instance);
         
         const commitmentByteTree = eio.ByteTree.asByteTree(commitment);
