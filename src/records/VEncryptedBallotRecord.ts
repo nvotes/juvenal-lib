@@ -128,63 +128,57 @@ export class VEncryptedBallotRecord implements VRecord {
            const ppGroup = new arithm.PPGroup([group, group]);
 
            try {
-            this.encryptedBallot.contests.map((contest, index) => {
-                    const context = this.context.slice();
-                    context.push('Contest #' + index);
-
-                    // Load the encrypted ballot selections for this contest
-                    // as an arithm.PPGroupElement[] array
-                    const selections = contest.selections.map(
-                        (selection) => {
-                            const c1 = strDecToModPGroupElement(
-                                selection.message.public_key,
-                                group
-                            );
-                            const c2 = strDecToModPGroupElement(
-                                selection.message.ciphertext,
-                                group
-                            );
-                            if (isError(c1) || isError(c2)) {
-                                let error = firstError([c1, c2]);
-                                throw error;
-                            } else {
-                                return ppGroup.prod([c1, c2]);
-                            }
-                        }
-                    );
-                    // multiply the selections (ciphertexts) to obtain the encrypted
-                    // sum of the selections
-                    const encryptedSum = elgamal.sum(selections, ppGroup);
-
-                    const nElement = strDecToPRingElement(
-                        contest.max_selections,
-                        group.pRing
-                    );
-
-                    if (isError(nElement)) {
-                        const error: Error = nElement;
-                        throw error;
-                    } else {
-                        // Obtain g^-n
-                        const gnInv = group.getg().exp(nElement).inv();
-
-                        // Prove that the number of selections is equal to the number 
-                        // of max selections (n). To do that, we homomorphically sum 
-                        // the encrypted ballots obtaining an encrypted sum (c1, c2),
-                        // and then we verify the Chaum-Pedersen proof (c1, c2/g^n).
-                        const chaum_pedersen = new VChaumPedersenProofRecord(
-                            context,
-                            this.label,
-                            contest.num_selections_proof,
-                            encryptedSum.project(0) as arithm.ModPGroupElement, 
-                            encryptedSum.project(1).mul(gnInv) as arithm.ModPGroupElement, 
-                            this.publicKey,
-                            "Ballot Max Selections"
+                // Load the encrypted ballot selections for this contest
+                // as an arithm.PPGroupElement[] array
+                const selections = contest.selections.map(
+                    (selection) => {
+                        const c1 = strDecToModPGroupElement(
+                            selection.message.public_key,
+                            group
                         );
-                        chaum_pedersen.verify(recorder);
+                        const c2 = strDecToModPGroupElement(
+                            selection.message.ciphertext,
+                            group
+                        );
+                        if (isError(c1) || isError(c2)) {
+                            let error = firstError([c1, c2]);
+                            throw error;
+                        } else {
+                            return ppGroup.prod([c1, c2]);
+                        }
                     }
+                );
+                // multiply the selections (ciphertexts) to obtain the encrypted
+                // sum of the selections
+                const encryptedSum = elgamal.sum(selections, ppGroup);
 
-                });
+                const nElement = strDecToPRingElement(
+                    contest.max_selections,
+                    group.pRing
+                );
+
+                if (isError(nElement)) {
+                    const error: Error = nElement;
+                    throw error;
+                } else {
+                    // Obtain g^-n
+                    const gnInv = group.getg().exp(nElement).inv();
+
+                    // Prove that the number of selections is equal to the number 
+                    // of max selections (n). To do that, we homomorphically sum 
+                    // the encrypted ballots obtaining an encrypted sum (c1, c2),
+                    // and then we verify the Chaum-Pedersen proof (c1, c2/g^n).
+                    const chaum_pedersen = new VChaumPedersenProofRecord(
+                        context,
+                        this.label,
+                        contest.num_selections_proof,
+                        encryptedSum.project(0) as arithm.ModPGroupElement, 
+                        encryptedSum.project(1).mul(gnInv) as arithm.ModPGroupElement, 
+                        this.publicKey,
+                        "Ballot Max Selections"
+                    );
+                    chaum_pedersen.verify(recorder);
+                }
            } catch(error) {
 
            }
