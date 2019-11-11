@@ -107,7 +107,7 @@ export declare namespace arithm {
         
 
         mul(factor: PPGroupElement): PPGroupElement
-        project(i: number): PGroupElement
+        project(i: number): ModPGroupElement
     }
     
     class ModPGroup extends PGroup {

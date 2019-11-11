@@ -172,8 +172,8 @@ export class VEncryptedBallotRecord implements VRecord {
                         context,
                         this.label,
                         contest.num_selections_proof,
-                        encryptedSum.project(0) as arithm.ModPGroupElement, 
-                        encryptedSum.project(1).mul(gnInv) as arithm.ModPGroupElement, 
+                        encryptedSum.project(0), 
+                        encryptedSum.project(1).mul(gnInv), 
                         this.publicKey,
                         "Ballot Max Selections"
                     );
