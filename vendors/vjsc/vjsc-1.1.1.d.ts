@@ -124,6 +124,7 @@ export declare namespace arithm {
         getg(): ModPGroupElement
         getElementOrder(): LargeInteger
         toElement(bytes: eio.ByteTree | Uint8Array): ModPGroupElement
+        toElementAlt(byteTree: eio.ByteTree): ModPGroupElement
         encode(bytes: Uint8Array, startIndex: number, length: number): ModPGroupElement
     }
     

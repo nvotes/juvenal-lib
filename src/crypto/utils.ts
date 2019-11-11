@@ -73,24 +73,7 @@ export function strDecToByteTree(
     decLiStr: string | number,
     treeSize: number
 ): eio.ByteTree | Error {
-    let hex = strDecToHex(decLiStr); 
-
-    // First make it even so that byte length calculations work
-    if (hex.length % 2 == 1) {
-        hex = "0" + hex;
-    }
-
-    // Check that the number is not bigger than the expected tree size
-    if (hex.length / 2 > treeSize) {
-        return new Error("Number is too big for encoding");
-    }
-
-    // The padding size is otherwise the number of extra zeros we
-    // require to have the appropiate number of bytes
-    let padding_size = treeSize - hex.length / 2;
-    for (var i = 0; i < padding_size; i++) {
-        hex = "00" + hex;
-    }
+    let hex = strDecToHex(decLiStr);
 
     return eio.ByteTree.asByteTree(util.hexToByteArray(hex));
 }
@@ -121,7 +104,7 @@ export function strDecToModPGroupElement(
     // Then convert it to a group element, dealing with errors if any
     let element: arithm.ModPGroupElement;
     try {
-        element = modPGroup.toElement(byteTree);
+        element = modPGroup.toElementAlt(byteTree);
     } catch(error) {
         return error;
     }
