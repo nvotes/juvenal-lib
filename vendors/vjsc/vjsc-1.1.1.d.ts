@@ -98,12 +98,14 @@ export declare namespace arithm {
     
     class PPGroup extends PGroup {
         constructor(value: PGroup[], width?: number)
-
+        getONE(): PPGroupElement
         prod(value: PGroupElement[]): PPGroupElement
     }
 
     class PPGroupElement extends PGroupElement {
         constructor(pPGroup: PPGroup, values: LargeInteger[])
+        
+
         mul(factor: PPGroupElement): PPGroupElement
         project(i: number): PGroupElement
     }

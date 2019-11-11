@@ -22,6 +22,6 @@ export function sum(
 ): arithm.PPGroupElement {
     return ciphertexts.reduce(
         (encryptedSum, ciphertext) => encryptedSum.mul(ciphertext),
-        ppGroup.getONE() as arithm.PPGroupElement
+        ppGroup.getONE()
     );
 }
