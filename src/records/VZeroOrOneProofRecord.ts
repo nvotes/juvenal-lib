@@ -68,7 +68,7 @@ export class VZeroOrOneProofRecord implements VRecord {
         this.proofTitle = proofTitle;
     }
 
-    /// Verify the Schnorr ZKP
+    /// Verify the ZKPs
     verify(recorder: VRecorder): void {
         const group = this.K.pGroup;
 
