@@ -91,10 +91,6 @@ export class VZeroOrOneProofRecord implements VRecord {
                 group.pRing, 
                 schnorrProofVerifiers
             );
-
-            const AbyteTree = this.A.toByteTree();
-            const zeroBByteTree = this.B.toByteTree();
-            const oneBByteTree = this.B.mul(group.getg().inv()).toByteTree();
             
             const zeroCommitment1 = strDecToByteTree(
                 this.zero_proof.commitment.public_key,
