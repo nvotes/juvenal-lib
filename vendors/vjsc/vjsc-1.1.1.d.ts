@@ -174,7 +174,7 @@ export declare namespace crypto {
             statDist: number): Uint8Array
    
    
-        verify(label: Uint8Array, instance: any, hashfunction: HashFunction, 
+        verify(label: Uint8Array, instance: arithm.PGroupElement | arithm.PGroupElement[] , hashfunction: HashFunction, 
             proof: Uint8Array): boolean
     }
     
