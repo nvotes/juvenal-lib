@@ -104,7 +104,10 @@ export class VEncryptedBallotRecord implements VRecord {
             );
 
             recorder.record(
-                contest.max_selections == contestInfo.maxSelections,
+                (
+                    contestInfo !== undefined && 
+                    contest.max_selections == contestInfo.maxSelections
+                ),
                 context,
                 "CastBallotMaxSelections",
                 "The maximum number of selections matches the " +
