@@ -188,7 +188,7 @@ export class VEncryptedBallotRecord implements VRecord {
                     const selectionContext = context.slice();
                     selectionContext.push("Selection #" + index);
                     
-                    const zero_or_one = new VZeroOrOneProofRecord(
+                    const zeroOrOneProof = new VZeroOrOneProofRecord(
                         selectionContext,
                         this.label,
                         /*zero_proof=*/contest.selections[index].zero_proof,
@@ -198,7 +198,7 @@ export class VEncryptedBallotRecord implements VRecord {
                         /*K=*/this.publicKey,
                         "selection of zero or one"
                     );
-                    zero_or_one.verify(recorder);
+                    zeroOrOneProof.verify(recorder);
                 });
            } catch(error) {
                 recorder.record(
