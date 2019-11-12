@@ -113,12 +113,12 @@ export class VZeroOrOneProofRecord implements VRecord {
                 !isError(oneCommitment1)  && !isError(oneCommitment2)) 
             {
                 // 0 or 1
-                const instances = [
+                const instances: arithm.PPGroupElement[] = [
                     ppGroup.prod([this.A, this.B]),
                     ppGroup.prod([this.A, this.B.mul(group.getg().inv())])
                 ];
                 
-                const commitments = [
+                const commitments: eio.ByteTree[] = [
                     new eio.ByteTree([
                         eio.ByteTree.asByteTree(zeroCommitment1),
                         eio.ByteTree.asByteTree(zeroCommitment2) 
@@ -130,7 +130,7 @@ export class VZeroOrOneProofRecord implements VRecord {
                 ];
 
                 // verificatum format groups challenges and responses this way
-                const responses = [
+                const responses: eio.ByteTree[] = [
                     new eio.ByteTree([
                         eio.ByteTree.asByteTree(zeroChallenge),
                         eio.ByteTree.asByteTree(oneChallenge) 
@@ -141,12 +141,12 @@ export class VZeroOrOneProofRecord implements VRecord {
                     ])
                 ];
 
-                const proof = new eio.ByteTree([
+                const proof: eio.ByteTree = new eio.ByteTree([
                     new eio.ByteTree(commitments), 
                     new eio.ByteTree(responses)
                 ]);
 
-                const verificationResult = cdsVerifier.verify(
+                const verificationResult: boolean = cdsVerifier.verify(
                     this.label,
                     instances,
                     crypto.sha256,
