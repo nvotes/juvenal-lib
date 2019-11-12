@@ -103,8 +103,7 @@ export declare namespace arithm {
     }
 
     class PPGroupElement extends PGroupElement {
-        constructor(pPGroup: PPGroup, values: LargeInteger[])
-        
+        constructor(pPGroup: PPGroup, values: LargeInteger[])        
 
         mul(factor: PPGroupElement): PPGroupElement
         project(i: number): ModPGroupElement

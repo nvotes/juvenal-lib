@@ -177,7 +177,8 @@ export class VElectionRecord implements VRecord {
                         this,
                         publicKeyRecord,
                         baseHash,
-                        index + 1)
+                        index + 1
+                    )
                 );
         } catch(error) {
             recorder.record(

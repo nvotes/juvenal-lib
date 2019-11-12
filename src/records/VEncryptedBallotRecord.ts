@@ -12,6 +12,7 @@ import {
 } from '../crypto/utils';
 import * as elgamal from '../crypto/elgamal'
 import { VChaumPedersenProofRecord } from './VChaumPedersenProofRecord';
+import { VZeroOrOneProofRecord } from './VZeroOrOneProofRecord';
 
 export class VContestInfo {
     numSelections: number;
@@ -171,16 +172,41 @@ export class VEncryptedBallotRecord implements VRecord {
                     const chaum_pedersen = new VChaumPedersenProofRecord(
                         context,
                         this.label,
-                        contest.num_selections_proof,
-                        encryptedSum.project(0), 
-                        encryptedSum.project(1).mul(gnInv), 
-                        this.publicKey,
-                        "Ballot Max Selections"
+                        /*proof=*/contest.num_selections_proof,
+                        /*A=*/encryptedSum.project(0), 
+                        /*B=*/encryptedSum.project(1).mul(gnInv), 
+                        /*K=*/this.publicKey,
+                        "ballot max selections"
                     );
                     chaum_pedersen.verify(recorder);
                 }
-           } catch(error) {
 
+                // Now we will verify the proofs that each selection is either 
+                // of a one or a zero. This is done using Chaum-Pedersen with
+                // the Cramer-Damgård-Schoenmakers technique
+                selections.map((selection, index) => {
+                    const selectionContext = context.slice();
+                    selectionContext.push("Selection #" + index);
+                    
+                    const zero_or_one = new VZeroOrOneProofRecord(
+                        selectionContext,
+                        this.label,
+                        /*zero_proof=*/contest.selections[index].zero_proof,
+                        /*one_proof=*/contest.selections[index].one_proof,
+                        /*A=*/selection.project(0), 
+                        /*B=*/selection.project(1), 
+                        /*K=*/this.publicKey,
+                        "selection of zero or one"
+                    );
+                    zero_or_one.verify(recorder);
+                });
+           } catch(error) {
+                recorder.record(
+                    false,
+                    context,
+                    "CastBallot",
+                    "Error verifying the encrypted ballot: " + error.message
+                );
            }
         });
         
