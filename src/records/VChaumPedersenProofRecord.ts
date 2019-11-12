@@ -73,7 +73,7 @@ export class VChaumPedersenProofRecord implements VRecord {
         this.proofTitle = proofTitle;
     }
 
-    /// Verify the Schnorr ZKP
+    /// Verify the ZKP
     verify(recorder: VRecorder): void {
         const group = this.K.pGroup;
 

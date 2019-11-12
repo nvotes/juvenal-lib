@@ -68,7 +68,7 @@ export class VZeroOrOneProofRecord implements VRecord {
         this.proofTitle = proofTitle;
     }
 
-    /// Verify the Schnorr ZKP
+    /// Verify the ZKPs
     verify(recorder: VRecorder): void {
         const group = this.K.pGroup;
 
@@ -113,9 +113,9 @@ export class VZeroOrOneProofRecord implements VRecord {
                 !isError(oneCommitment1)  && !isError(oneCommitment2)) 
             {
                 // 0 or 1
-                const instances: arithm.ModPGroupElement[] = [
-                    (ppGroup.prod([this.A, this.B]) as unknown) as arithm.ModPGroupElement,
-                    (ppGroup.prod([this.A, this.B.mul(group.getg().inv())])  as unknown) as arithm.ModPGroupElement
+                const instances = [
+                    ppGroup.prod([this.A, this.B]),
+                    ppGroup.prod([this.A, this.B.mul(group.getg().inv())])
                 ];
                 
                 const commitments = [
