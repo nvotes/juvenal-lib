@@ -35,6 +35,10 @@ export class SchnorrProof extends crypto.SchnorrProof {
         const proof = new eio.ByteTree([commitmentByteTree, responseByteTree]);
         const proofByteArray = proof.toByteArray();
         
+        // TODO: verify that the given challenge equals the calculated one.
+        // We currently verify the response, which depends directly on the 
+        // challenge, but we should verify all the data we can, and that
+        // includes the given challenge.
         return this.verify(
             label, 
             instanceElement, 
