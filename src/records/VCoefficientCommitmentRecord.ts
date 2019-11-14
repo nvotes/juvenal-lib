@@ -6,7 +6,7 @@ import {
     SchnorrProof 
 } from 'electionguard-schema-0.85/@types/election_record';
 import { arithm } from 'vjsc/vjsc-1.1.1';
-import { VCoefficientCommitmentsMatrixRecord } from './VCoefficientCommitmentsMatrixRecord';
+import { VCoefficientCommitmentsRecord } from './VCoefficientCommitmentsRecord';
 import { strDecToModPGroupElement, isError } from '../crypto/utils';
 
 /**
@@ -26,7 +26,7 @@ export class VCoefficientCommitmentRecord implements VRecord {
     context: string[] = [];
 
     /// Parent record
-    parent: VCoefficientCommitmentsMatrixRecord;
+    parent: VCoefficientCommitmentsRecord;
 
     /// The record data
     commitment: CoefficcientCommitment;
@@ -38,7 +38,7 @@ export class VCoefficientCommitmentRecord implements VRecord {
     baseHash: Uint8Array;
 
     constructor(
-        parent: VCoefficientCommitmentsMatrixRecord,
+        parent: VCoefficientCommitmentsRecord,
         commitment: CoefficcientCommitment,
         baseHash: Uint8Array,
         index: number

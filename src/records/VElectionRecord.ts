@@ -17,15 +17,16 @@ import {
 } from '../crypto/utils';
 import { baselineParameters as modPGroup } from '../crypto/baselineParams';
 import { 
-    VCoefficientCommitmentsMatrixRecord,
+    VCoefficientCommitmentsRecord,
     CoefficientCommitmentsMatrix 
-} from './VCoefficientCommitmentsMatrixRecord';
+} from './VCoefficientCommitmentsRecord';
 import { createJointPublicKey } from '../crypto/elgamal';
 import { 
     createBaseHash, 
     createExtendedBaseHash 
 } from '../crypto/baseHash';
 import { VEncryptedBallotRecord, VContestInfo } from './VEncryptedBallotRecord';
+import { VContestTallyRecord } from './VContestTallyRecord';
 
 /**
  * Using the election schemas, returns a correctly initialized Ajv schema
@@ -169,11 +170,11 @@ export class VElectionRecord implements VRecord {
         );
 
         // Initialize verification public key records
-        let vCoefficients: VCoefficientCommitmentsMatrixRecord[] = [];
+        let vCoefficients: VCoefficientCommitmentsRecord[] = [];
         try {
             vCoefficients = this.election.trustee_public_keys
                 .map((publicKeyRecord, index) =>
-                    new VCoefficientCommitmentsMatrixRecord(
+                    new VCoefficientCommitmentsRecord(
                         this,
                         publicKeyRecord,
                         baseHash,
@@ -254,5 +255,25 @@ export class VElectionRecord implements VRecord {
                 );
             vCastBallots.map((vCastBallot) => vCastBallot.verify(recorder));
         }
+
+
+        if (!isError(jointPublicKey)) {
+            const vContestTallies = this.election.contest_tallies
+                .map((tallyDecryption, index) =>
+                    new VContestTallyRecord(
+                        this.context, 
+                        extendedBaseHash,
+                        tallyDecryption,
+                        vCoefficients.map(
+                            (commitments) => commitments.firstCoefficientElement
+                        ),
+                        index
+                    )
+            );
+
+            vContestTallies.map((vContestTally) => vContestTally.verify(recorder))
+        }
+
+        // TODO: verify that cast ballots sum to encrypted ballot in tally record
     }
 }

@@ -32,7 +32,7 @@ export type CoefficientCommitmentsMatrix = [
 /**
  * Allows the verification of coefficient commitments matrix records.
  */
-export class VCoefficientCommitmentsMatrixRecord implements VRecord {
+export class VCoefficientCommitmentsRecord implements VRecord {
     /// Reference to the parent election record
     parent: VElectionRecord;
 
