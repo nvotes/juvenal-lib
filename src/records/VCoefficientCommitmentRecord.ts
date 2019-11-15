@@ -12,7 +12,7 @@ import { strDecToModPGroupElement, isError } from '../crypto/utils';
 /**
  * Represents a polynomial coefficient commitment in the schema.
  */
-export type CoefficcientCommitment = {
+export type CoefficientCommitment = {
     /// The polynomial coefficient
     public_key: BigNaturalNumber1;
 
@@ -29,7 +29,7 @@ export class VCoefficientCommitmentRecord implements VRecord {
     parent: VCoefficientCommitmentsRecord;
 
     /// The record data
-    commitment: CoefficcientCommitment;
+    commitment: CoefficientCommitment;
 
     /// The index of this coefficient commitment
     index: number;
@@ -39,7 +39,7 @@ export class VCoefficientCommitmentRecord implements VRecord {
 
     constructor(
         parent: VCoefficientCommitmentsRecord,
-        commitment: CoefficcientCommitment,
+        commitment: CoefficientCommitment,
         baseHash: Uint8Array,
         index: number
     ) {

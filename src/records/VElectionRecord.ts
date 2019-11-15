@@ -27,6 +27,7 @@ import {
 } from '../crypto/baseHash';
 import { VEncryptedBallotRecord, VContestInfo } from './VEncryptedBallotRecord';
 import { VContestTallyRecord } from './VContestTallyRecord';
+import { VSpoiledBallotRecord } from './VSpoiledBallotRecord';
 
 /**
  * Using the election schemas, returns a correctly initialized Ajv schema
@@ -257,6 +258,9 @@ export class VElectionRecord implements VRecord {
         }
 
 
+        const publicKeys = vCoefficients.map(
+            (commitments) => commitments.firstCoefficientElement
+        )
         if (!isError(jointPublicKey)) {
             const vContestTallies = this.election.contest_tallies
                 .map((tallyDecryption, index) =>
@@ -264,16 +268,27 @@ export class VElectionRecord implements VRecord {
                         this.context, 
                         extendedBaseHash,
                         tallyDecryption,
-                        vCoefficients.map(
-                            (commitments) => commitments.firstCoefficientElement
-                        ),
+                        publicKeys,
                         index
                     )
-            );
+                );
 
             vContestTallies.map((vContestTally) => vContestTally.verify(recorder))
         }
 
         // TODO: verify that cast ballots sum to encrypted ballot in tally record
+
+        const vSpoiledBallots = this.election.spoiled_ballots
+            .map((spoiledBallot, index) =>
+                new VSpoiledBallotRecord(
+                        this.context,
+                        extendedBaseHash,
+                        spoiledBallot.contests,
+                        publicKeys,
+                        index
+                    )
+            )    
+
+        vSpoiledBallots.map((spoiled) => spoiled.verify(recorder))
     }
 }

@@ -8,7 +8,7 @@ import {
 import { arithm, util } from '../../vendors/vjsc/vjsc-1.1.1';
 import { strDecToModPGroupElement, isError } from '../crypto/utils';
 import { 
-    CoefficcientCommitment,
+    CoefficientCommitment,
     VCoefficientCommitmentRecord
 } from './VCoefficientCommitmentRecord';
 
@@ -16,8 +16,8 @@ import {
  * List of polynomial coefficients of a trustee.
  */
 export type CoefficientCommitments = [
-    CoefficcientCommitment,
-    ...CoefficcientCommitment[]
+    CoefficientCommitment,
+    ...CoefficientCommitment[]
 ];
 
 /**

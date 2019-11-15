@@ -23,6 +23,16 @@ export function isError(obj: any | Error): obj is Error {
 }
 
 /**
+ * Flattens a 2D array into a 1D array. We need this
+ * custom function as flatMap is not supported yet in ES027
+ * 
+ * @param obj 2D array we want to flatten into 1D 
+ */
+export function flatten2D<T>(array: T[][]): T[] {
+    return ([] as T[]).concat(...array)
+}
+
+/**
  * Returns the first error of the list or an empty error, but always
  * an error. This is useful if we have a lot of errors, to get the
  * first of them.
