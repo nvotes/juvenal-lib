@@ -7947,8 +7947,10 @@ return pbt.toByteArray();
 SigmaProof.prototype.verify = function (label, instance, hashfunction, proof) {
 try {
 var pbt = eio.ByteTree.readByteTreeFromByteArray(proof);
-if (!pbt.isLeaf() && pbt.value.length === 2) {
-
+// drb
+// if (!pbt.isLeaf() && pbt.value.length === 3) {
+if (!pbt.isLeaf() && pbt.value.length >= 2) {
+// drb
 // We must wrap byte array labels to get an invertible
 // complete prefix.
 var lbt = eio.ByteTree.asByteTree(label);
@@ -7962,10 +7964,20 @@ var commitment = this.byteTreeToCommitment(cbt);
 var bt = new eio.ByteTree([lbt, ibt, cbt]);
 var challenge = this.challenge(bt, hashfunction);
 
+// drb
+var challengeOk = true;
+if(pbt.value.length === 3) {
+    var inputChallenge = pbt.value[2];
+    var inputChallengeElement = this.byteTreeToReply(inputChallenge);
+    challengeOk = inputChallengeElement.equals(challenge);
+}
+// drb
+
 var rbt = pbt.value[1];
 var reply = this.byteTreeToReply(rbt);
 
-return this.check(instance, commitment, challenge, reply);
+// drb
+return this.check(instance, commitment, challenge, reply) && challengeOk;
 } else {
 return false;
 }
