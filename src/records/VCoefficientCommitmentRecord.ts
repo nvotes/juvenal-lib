@@ -5,7 +5,6 @@ import {
     BigNaturalNumber1, 
     SchnorrProof 
 } from 'electionguard-schema-0.85/@types/election_record';
-import { arithm } from 'vjsc/vjsc-1.1.1';
 import { VCoefficientCommitmentsRecord } from './VCoefficientCommitmentsRecord';
 import { strDecToModPGroupElement, isError } from '../crypto/utils';
 

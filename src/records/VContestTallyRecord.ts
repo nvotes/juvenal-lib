@@ -1,7 +1,6 @@
 import { VRecord } from './VRecord';
 import { VRecorder } from '../VRecorder';
 import { arithm } from '../../vendors/vjsc/vjsc-1.1.1';
-
 import { 
     TallyDecryption 
 } 

@@ -1,11 +1,7 @@
 import { VRecord } from './VRecord';
 import { VElectionRecord } from './VElectionRecord';
 import { VRecorder } from '../VRecorder';
-import { 
-    BigNaturalNumber1, 
-    SchnorrProof 
-} from 'electionguard-schema-0.85/@types/election_record';
-import { arithm, util } from '../../vendors/vjsc/vjsc-1.1.1';
+import { arithm } from '../../vendors/vjsc/vjsc-1.1.1';
 import { strDecToModPGroupElement, isError } from '../crypto/utils';
 import { 
     CoefficientCommitment,
