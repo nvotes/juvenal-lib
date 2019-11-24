@@ -26,7 +26,7 @@ export class VContestTallyRecord implements VRecord {
     
     /// The list of ballots, used to verify that the encrypted sum of them 
     /// equals to the encrypted tally
-    cast_ballots: EncryptedBallot[]
+    castBallots: EncryptedBallot[]
 
     /// Public keys for trustees
     publicKeys: arithm.ModPGroupElement[]
@@ -35,24 +35,24 @@ export class VContestTallyRecord implements VRecord {
     index: number
 
     constructor(
-        parent_context: string[],
+        parentContext: string[],
         label: Uint8Array,
         tallyDecryptions: ContestTallyDecryptions,
         cast_ballots: EncryptedBallot[],
         publicKeys: arithm.ModPGroupElement[],
         index: number
     ) {
-        this.context = parent_context.slice()
+        this.context = parentContext.slice()
         this.context.push("Tally, contest #" + index)
         this.label = label
         this.tallyDecryptions = tallyDecryptions
-        this.cast_ballots = cast_ballots
+        this.castBallots = cast_ballots
         this.publicKeys = publicKeys
         this.index = index
     }
 
     getSelectionEncryptions(selectionIndex: number): ElGamalMessage[] {
-        return this.cast_ballots
+        return this.castBallots
             .map((ballot) => 
                 ballot.contests[this.index].selections[selectionIndex].message
             )
