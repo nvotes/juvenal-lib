@@ -4,6 +4,7 @@ import { arithm } from '../../vendors/vjsc/vjsc-1.1.1';
 import { VChaumPedersenProofRecord } from './VChaumPedersenProofRecord';
 import { ElGamalMessage } from 'electionguard-schema-0.85/@types/ballot_decryption';
 import { SpoiledDecryption } from './VSpoiledBallotRecord'
+import { EncryptedBallot } from '../../vendors/electionguard-schema-0.85/@types/encrypted_ballot';
 import { 
     TallyDecryption, 
     DecryptionShare,
@@ -16,6 +17,8 @@ import {
     firstError
 }
 from '../crypto/utils';
+import * as elgamal from '../crypto/elgamal'
+
 
 export class VDecryptionRecord implements VRecord {
     /// Context of this record
@@ -26,6 +29,12 @@ export class VDecryptionRecord implements VRecord {
 
     /// The object containing all decryption information
     decryption: TallyDecryption | SpoiledDecryption
+
+    /// List of selection encryptions from each cast ballot
+    /// corresponding to this decryption. 
+    ///
+    /// Note that this is only used if it's a tally decryption.
+    selectionEncryptions: ElGamalMessage[]
     
     /// Public keys for trustees
     publicKeys: arithm.ModPGroupElement[]
@@ -39,6 +48,7 @@ export class VDecryptionRecord implements VRecord {
      * @param context 
      * @param label
      * @param decryption
+     * @param selectionEncryptions
      * @param publicKeys
      * @param index 
      */
@@ -46,6 +56,7 @@ export class VDecryptionRecord implements VRecord {
         parent_context: string[],
         label: Uint8Array,
         decryption: TallyDecryption | SpoiledDecryption,
+        selectionEncryptions: ElGamalMessage[],
         publicKeys: arithm.ModPGroupElement[],
         index: number
     ) {
@@ -53,20 +64,18 @@ export class VDecryptionRecord implements VRecord {
         this.context.push("Selection #" + index)
         this.label = label
         this.decryption = decryption
+        this.selectionEncryptions = selectionEncryptions
         this.publicKeys = publicKeys
         this.index = index
     }
 
-    /// Verify tally decryption
-    /// 1. Shares were computed correctly
-    /// 2. Decryption was correctly computed from shares
-    /// 3. Cleartext corresponds to decryption
+    /// Verify tally decryption or spoiled ballot
+    /// 1. (if tally decryption) The encrypted tally is the sum of encrypted cast ballots
+    /// 2. Shares were computed correctly
+    /// 3. Decryption was correctly computed from shares
+    /// 4. Cleartext corresponds to decryption
     verify(recorder: VRecorder): void {
         const group = this.publicKeys[0].pGroup
-        /* const encrypted = this.decryptedTally.encrypted_tally
-        const decrypted = this.decryptedTally.decrypted_tally
-        const shares = this.decryptedTally.shares
-        const cleartext = this.decryptedTally.cleartext*/
         const [encrypted, decrypted, shares, cleartext] = 
             this.extractDecryptionValues()
 
@@ -110,7 +119,52 @@ export class VDecryptionRecord implements VRecord {
                     (value, next) => value.mul(next)
                 )
             
-                if(!isError(beta) && !isError(gMessage)) {    
+                if(!isError(beta) && !isError(gMessage)) {  
+                    if(this.isTallyDecryption(this.decryption)) {
+                        // Verify that the encrypted tally is the sum of encrypted cast ballots
+                        const ppGroup = new arithm.PPGroup([group, group])
+                        try {
+                            // Load the encrypted ballot selections for this contest
+                            // as an arithm.PPGroupElement[] array
+                            const selections = this.selectionEncryptions.map(
+                                (selection) => {
+                                    
+                                    const selectionAlpha = strDecToModPGroupElement(
+                                        selection.public_key,
+                                        group
+                                    )
+                                    const selectionBeta = strDecToModPGroupElement(
+                                        selection.ciphertext,
+                                        group
+                                    )
+                                    if (isError(selectionAlpha) || isError(selectionBeta)) {
+                                        let error = firstError([selectionAlpha, selectionBeta])
+                                        throw error
+                                    } else {
+                                        return ppGroup.prod([selectionAlpha, selectionBeta])
+                                    }
+                                }
+                            )
+                            // multiply the selections (ciphertexts) to obtain the encrypted
+                            // sum of the selections
+                            const calculatedEncryptedSum = elgamal.sum(selections, ppGroup)
+                            const givenEncryptedTally = ppGroup.prod([alpha, beta])
+                            recorder.record(
+                                calculatedEncryptedSum.equals(givenEncryptedTally),
+                                this.context,
+                                "TallySum",
+                                "The encrypted tally should match the sum of encrypted cast ballots"
+                            )
+                        } catch(error) {
+                            recorder.record(
+                                false,
+                                this.context,
+                                "LoadingBallots",
+                                "Not all ballots were loaded correctly: " + error.message
+                            )
+                        }
+                    }
+                    
                     const lhs = beta.mul(combined.inv())
                     // verify that encrypted * (1/sum(shares)) = decrypted
                     recorder.record(

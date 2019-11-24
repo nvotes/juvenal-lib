@@ -63,6 +63,7 @@ export class VSpoiledBallotRecord implements VRecord {
                         context,
                         this.label,
                         decryption,
+                        /*not needed for spoiled ballots*/ [],
                         this.publicKeys,
                         index
                     )

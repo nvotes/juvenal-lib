@@ -261,6 +261,7 @@ export class VElectionRecord implements VRecord {
                     this.context, 
                     extendedBaseHash,
                     tallyDecryption,
+                    this.election.cast_ballots,
                     publicKeys,
                     index
                 )
