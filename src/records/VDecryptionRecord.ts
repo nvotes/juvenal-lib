@@ -50,7 +50,7 @@ export class VDecryptionRecord implements VRecord {
      * @param decryption
      * @param selectionEncryptions
      * @param publicKeys
-     * @param index 
+     * @param selectionIndex 
      */
     constructor(
         parent_context: string[],
@@ -58,15 +58,15 @@ export class VDecryptionRecord implements VRecord {
         decryption: TallyDecryption | SpoiledDecryption,
         selectionEncryptions: ElGamalMessage[],
         publicKeys: arithm.ModPGroupElement[],
-        index: number
+        selectionIndex: number
     ) {
         this.context = parent_context.slice()
-        this.context.push("Selection #" + index)
+        this.context.push("Selection #" + selectionIndex)
         this.label = label
         this.decryption = decryption
         this.selectionEncryptions = selectionEncryptions
         this.publicKeys = publicKeys
-        this.index = index
+        this.index = selectionIndex
     }
 
     /// Verify tally decryption or spoiled ballot
@@ -165,7 +165,9 @@ export class VDecryptionRecord implements VRecord {
                         }
                     }
                     
+                    // execute the decryption
                     const lhs = beta.mul(combined.inv())
+                    
                     // verify that encrypted * (1/sum(shares)) = decrypted
                     recorder.record(
                         lhs.equals(gMessage),
@@ -216,8 +218,8 @@ export class VDecryptionRecord implements VRecord {
         ElGamalMessage, 
         BigNaturalNumber8, 
         DecryptionShare[], 
-        number] 
-        {
+        number
+    ] {
         
         if(this.isTallyDecryption(this.decryption)) {
             return [

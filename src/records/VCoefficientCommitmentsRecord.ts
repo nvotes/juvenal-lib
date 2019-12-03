@@ -17,15 +17,6 @@ export type CoefficientCommitments = [
 ];
 
 /**
- * A list whose elements are the lists of polynomial coefficients of each
- * trustee.
- */
-export type CoefficientCommitmentsMatrix = [
-    CoefficientCommitments,
-    ...CoefficientCommitments[]
-];
-
-/**
  * Allows the verification of coefficient commitments matrix records.
  */
 export class VCoefficientCommitmentsRecord implements VRecord {
@@ -39,7 +30,7 @@ export class VCoefficientCommitmentsRecord implements VRecord {
     trusteeIndex: number;
 
     /// First coefficient of the trustee, which corresponds with the
-    /// public key of the trustee.
+    /// public key of the trustee
     firstCoefficientElement: arithm.ModPGroupElement;
 
     /// Context of this record
@@ -49,7 +40,7 @@ export class VCoefficientCommitmentsRecord implements VRecord {
     baseHash: Uint8Array;
 
     /**
-     * Constructor of the coefficient commitments matrix record.
+     * Constructor of the coefficient commitments record for a trustee.
      * 
      * @param parent Parent election record
      * @param commitments list of polynomial coefficient commitments

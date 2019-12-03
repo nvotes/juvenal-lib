@@ -269,19 +269,20 @@ export class VElectionRecord implements VRecord {
 
         vContestTallies.map((vContestTally) => vContestTally.verify(recorder))
 
-        // TODO: verify that cast ballots sum to encrypted ballot in tally record
-
         const vSpoiledBallots = this.election.spoiled_ballots
             .map((spoiledBallot, index) =>
                 new VSpoiledBallotRecord(
                         this.context,
                         extendedBaseHash,
                         spoiledBallot.contests,
+                        contestInfoArray,
                         publicKeys,
                         index
                     )
             )    
 
+        // Note that we can't verify spoiled ballots encryption proofs because
+        // they are not currently being included in the election record
         vSpoiledBallots.map((spoiled) => spoiled.verify(recorder))
     }
 }
