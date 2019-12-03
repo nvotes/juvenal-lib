@@ -1,5 +1,5 @@
 import { VRecord } from './VRecord';
-import { VRecorder } from '../VRecorder';
+import { VRecorder } from '../recorders/VRecorder';
 import { arithm } from '../../vendors/vjsc/vjsc-1.1.1';
 import { VChaumPedersenProofRecord } from './VChaumPedersenProofRecord';
 import { ElGamalMessage } from 'electionguard-schema-0.85/@types/ballot_decryption';

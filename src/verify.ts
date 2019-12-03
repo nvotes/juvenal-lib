@@ -6,7 +6,7 @@
  * or in a node backend.
  */
 import { ElectionRecord } from '../vendors/electionguard-schema-0.85/@types/election_record';
-import { VRecorder } from './VRecorder';
+import { VRecorder } from './recorders/VRecorder';
 import { VElectionRecord } from './records/VElectionRecord';
 import { isError } from './crypto/utils';
 

@@ -7,7 +7,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { exitErrorString, exitError} from '../errors';
 import { verifyElectionRecord } from '../verify';
-import { CLIRecorder } from '../CLIRecorder';
+import { CLIRecorder } from '../recorders/CLIRecorder';
 
 main(process.argv);
 

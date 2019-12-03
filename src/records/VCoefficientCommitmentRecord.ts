@@ -1,5 +1,5 @@
 import { VRecord } from './VRecord';
-import { VRecorder } from '../VRecorder';
+import { VRecorder } from '../recorders/VRecorder';
 import { VSchnorrProofRecord } from './VSchnorrProofRecord';
 import { 
     BigNaturalNumber1, 

@@ -1,6 +1,6 @@
 import { VRecord } from './VRecord';
 import { VElectionRecord } from './VElectionRecord';
-import { VRecorder } from '../VRecorder';
+import { VRecorder } from '../recorders/VRecorder';
 import { arithm } from '../../vendors/vjsc/vjsc-1.1.1';
 import { strDecToModPGroupElement, isError } from '../crypto/utils';
 import { 

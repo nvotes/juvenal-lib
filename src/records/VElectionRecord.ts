@@ -6,7 +6,7 @@ import {
 import { schemas } from '../../vendors/electionguard-schema-0.85/json_schemas';
 
 import { VRecord } from './VRecord';
-import { VRecorder } from '../VRecorder';
+import { VRecorder } from '../recorders/VRecorder';
 import { 
     strDecToHex,
     strDecToModPGroupElement,

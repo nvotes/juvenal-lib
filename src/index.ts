@@ -3,4 +3,4 @@
  */
 
 export { verifyElectionRecord } from './verify';
-export { VRecorder } from './VRecorder';
+export { VRecorder } from './recorders/VRecorder';

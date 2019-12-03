@@ -1,4 +1,4 @@
-import { VRecorder } from '../VRecorder';
+import { VRecorder } from '../recorders/VRecorder';
 
 /**
  * Interface for election records that allows operations such as
