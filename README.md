@@ -35,6 +35,15 @@ You can run the verifier through the command line using `node`:
 node build/src/bin/verifier.js $PATH_TO_ELECTION_RECORD.json
 ```
 
+There are multiple election record examples in the directory `test/data` that
+you can use with the verifier. For example, the following command should verify
+correctly the `valid_encrypted.json` election record, which contains a valid
+election record:
+
+```bash
+node build/src/bin/verifier.js tests/data/valid_encrypted.json
+```
+
 ## Development
 
 Note that we autogenerate both:
