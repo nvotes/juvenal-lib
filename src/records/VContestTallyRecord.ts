@@ -6,7 +6,8 @@ import {
 } 
 from '../../vendors/electionguard-schema-0.85/@types/election_record'
 import { VDecryptionRecord } from './VDecryptionRecord'
-import { ElGamalMessage } from '../../vendors/electionguard-schema-0.85/@types/decryption_share';
+import { ElGamalMessage } from '../../vendors/electionguard-schema-0.85/@types/decryption_share'
+import { VContestInfo } from './VEncryptedBallotRecord'
 
 
 export type ContestTallyDecryptions = [
@@ -28,34 +29,49 @@ export class VContestTallyRecord implements VRecord {
     /// equals to the encrypted tally
     castBallots: EncryptedBallot[]
 
+    /// Number of selections for each contest
+    contestInfoArray: VContestInfo[]
+
     /// Public keys for trustees
     publicKeys: arithm.ModPGroupElement[]
 
     /// The contest number in the election
-    index: number
+    contestIndex: number
 
     constructor(
         parentContext: string[],
         label: Uint8Array,
         tallyDecryptions: ContestTallyDecryptions,
         cast_ballots: EncryptedBallot[],
+        contestInfoArray: VContestInfo[],
         publicKeys: arithm.ModPGroupElement[],
-        index: number
+        contestIndex: number
     ) {
         this.context = parentContext.slice()
-        this.context.push("Tally, contest #" + index)
+        this.context.push("Tally, contest #" + contestIndex)
         this.label = label
         this.tallyDecryptions = tallyDecryptions
         this.castBallots = cast_ballots
+        this.contestInfoArray = contestInfoArray
         this.publicKeys = publicKeys
-        this.index = index
+        this.contestIndex = contestIndex
     }
 
-    getSelectionEncryptions(selectionIndex: number): ElGamalMessage[] {
-        return this.castBallots
-            .map((ballot) => 
-                ballot.contests[this.index].selections[selectionIndex].message
+    getSelectionEncryptions(selectionIndex: number, recorder: VRecorder): ElGamalMessage[] {
+        try {
+            return this.castBallots
+                .map((ballot) => 
+                    ballot.contests[this.contestIndex].selections[selectionIndex].message
+                )
+        } catch(e) {
+            recorder.record(
+                false,
+                this.context,
+                "SelectionEncryptionsLoading",
+                "Error loading the selection encryptions: " + e.message
             )
+            return []
+        }
     }
 
     verify(recorder: VRecorder): void {
@@ -66,7 +82,7 @@ export class VContestTallyRecord implements VRecord {
                 this.context,
                 this.label,
                 tallyDecryption,
-                this.getSelectionEncryptions(selectionIndex),
+                this.getSelectionEncryptions(selectionIndex, recorder),
                 this.publicKeys,
                 selectionIndex
             ) 

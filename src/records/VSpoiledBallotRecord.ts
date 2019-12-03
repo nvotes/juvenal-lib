@@ -72,7 +72,7 @@ export class VSpoiledBallotRecord implements VRecord {
                 let contestInfo = this.contestInfoArray[contestIndex]
 
                 recorder.record(
-                    cleartextSum == contestInfo.maxSelections,
+                    contestInfo !== undefined && cleartextSum == contestInfo.maxSelections,
                     context,
                     "SumOfPlaintexts",
                     "The sum of the plaintexts matches the sum of possible " + 
