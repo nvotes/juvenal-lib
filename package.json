@@ -41,6 +41,7 @@
   "jest": {
     "collectCoverageFrom": [
       "!**/node_modules/**",
+      "!**/vendors/**",
       "!**/coverage/**",
       "!**/serviceWorker.js",
       "!**/index.js"

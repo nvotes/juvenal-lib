@@ -52,11 +52,11 @@ function checkErrors(
 
 describe('Verify pregenerated election records', () => {
     test('tests/data/valid_encrypted.json records no errors', () => {
-        //checkErrors('tests/data/valid_encrypted.json', [])
+        checkErrors('tests/data/valid_encrypted.json', [])
     })
 
     test('tests/data/invalid_three_different_broken_proofs.json records appropiate errors', () => {
-        /*checkErrors('tests/data/invalid_three_different_broken_proofs.json', [
+        checkErrors('tests/data/invalid_three_different_broken_proofs.json', [
             {
                 status: false,
                 context: [
@@ -102,6 +102,6 @@ describe('Verify pregenerated election records', () => {
                 name: "SharesLoading",
                 title: "Not all shares were loaded correctly"
             }
-        ])*/
+        ])
     })
 })
