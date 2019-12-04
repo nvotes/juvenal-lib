@@ -90,6 +90,7 @@ The verifier uses minimal runtime dependencies to be very self-contained:
 
 And these are the development-only extra dependencies:
 - [jest]: typescript-friendy testing framework.
+- [coveralls]: generates test coverage reports.
 - [typedoc]: Generates package documentation.
 - [json-schema-to-typescript]: Compile json schema to typescript typings.
 

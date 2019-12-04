@@ -7,7 +7,8 @@
     "test": "jest",
     "clean": "rm -rf build/",
     "doc": "./node_modules/typedoc/bin/typedoc --out build/doc/ src/",
-    "generate_election_record_types": "cd ./vendors/electionguard-schema-0.85/; node ./generate_election_record_types.js; cd ../.."
+    "generate_election_record_types": "cd ./vendors/electionguard-schema-0.85/; node ./generate_election_record_types.js; cd ../..",
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
@@ -37,8 +38,17 @@
     "@types/node": "12.11.7",
     "ajv": "6.10.2"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "!**/node_modules/**",
+      "!**/coverage/**",
+      "!**/serviceWorker.js",
+      "!**/index.js"
+    ]
+  },
   "devDependencies": {
     "@types/jest": "24.0.20",
+    "coveralls": "^3.0.9",
     "jest": "24.9.0",
     "json-schema-to-typescript": "7.1.0",
     "ts-jest": "^24.1.0",
