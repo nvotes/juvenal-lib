@@ -11,6 +11,7 @@ install:
   - npm install -g typescript
   - npm install
 script:
-  - npm run build && npm run doc && npm run coveralls
+  - npm run build && npm run doc
+  - travis_wait 30 npm run coveralls
 git:
   depth: 1
