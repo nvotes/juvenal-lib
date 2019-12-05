@@ -103,7 +103,7 @@ not really relevant other than for development purposes:
 - [prettier]: The core prettier library.
 - [eslint-config-prettier]: Disables ESLint rules that might conflict with prettier.
 - [eslint-plugin-prettier]: Runs prettier as an ESLint rule.
-- [lint-staged]: Allows to run linting commands on files that are staged to be committed.
+- [link-staged]: Allows to run linting commands on files that are staged to be committed.
 - [husky]: Makes git hooks simpler to use.
 
 ## Contribute
