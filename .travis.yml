@@ -11,7 +11,7 @@ install:
   - npm install -g typescript
   - npm install
 script:
-  - tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet
+  - tsc --noEmit && eslint '{src,tests}/**/*.{js,ts,tsx}' --quiet
   - npm run build && npm run doc
   - travis_wait 45 npm run coveralls
 git:
