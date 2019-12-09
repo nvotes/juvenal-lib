@@ -1,7 +1,7 @@
 import { arithm, crypto, util } from '../../vendors/vjsc/vjsc-1.1.1.js'
 import * as elgamal from './elgamal'
 
-describe('Tests related to VJSC', () => {
+describe('Elgamal functions', () => {
   const groupName = 'modp2048'
   let params: string[]
   let group: arithm.ModPGroup
