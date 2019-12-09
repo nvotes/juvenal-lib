@@ -5,26 +5,10 @@ describe('Tests related to VJSC', () => {
   const groupName = 'modp2048'
   let params: string[]
   let group: arithm.ModPGroup
-  let generatorLI: arithm.LargeInteger
-  let g1: arithm.ModPGroupElement
-  let order: arithm.LargeInteger
-  let randomSource: crypto.RandomDevice
-  const statDist = 50
-  let pPGroup: arithm.PPGroup
-  let label: Uint8Array
 
   beforeAll(() => {
     params = arithm.ModPGroup.getParams(groupName)
     group = arithm.ModPGroup.getPGroup(groupName)
-    pPGroup = new arithm.PPGroup([group, group])
-
-    const gString: string = arithm.ModPGroup.getParams(groupName)[1]
-    generatorLI = new arithm.LargeInteger(gString)
-
-    g1 = group.getg()
-    order = group.getElementOrder()
-    randomSource = new crypto.RandomDevice()
-    label = randomSource.getBytes(10)
   })
 
   // Test that a joint public key is the multiplicative sum of the given

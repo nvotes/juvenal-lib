@@ -8,7 +8,7 @@ import { util, eio, arithm } from '../../vendors/vjsc/vjsc-1.1.1'
  * @param obj obj we want to differentiate the type of
  */
 export function isNull(obj: unknown | null): obj is null {
-  return obj !== null
+  return obj === null
 }
 
 /**
