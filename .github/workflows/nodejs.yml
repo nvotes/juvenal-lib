@@ -25,7 +25,7 @@ jobs:
     - run: node node_modules/eslint/bin/eslint.js '{src,tests}/**/*.{js,ts,tsx}' --quiet
     - run: npm run build --if-present
     - run: npm run doc
-    - run: jest --coverage
+    - run: node node_modules/jest/bin/jest.js --coverage
       
     - name: Coveralls parallel
       uses: coverallsapp/github-action@master
