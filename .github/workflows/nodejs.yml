@@ -21,7 +21,7 @@ jobs:
     - run: npm install -g typescript
     - run: npm install
     - run: tsc --noEmit
-    - run: eslint '{src,tests}/**/*.{js,ts,tsx}' --quiet
+    - run: node node_modules/eslint/bin/eslint.js '{src,tests}/**/*.{js,ts,tsx}' --quiet
     - run: npm run build --if-present
     - run: npm run doc
     - run: npm run coveralls
