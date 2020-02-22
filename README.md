@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/github/license/nVotes/juvenal-lib)](License)
 [![Dependencies badge](https://david-dm.org/nVotes/juvenal-lib.svg)](https://david-dm.org/nVotes/juvenal-lib)
-[![Build](https://github.com/nVotes/juvenal-lib/workflows/.github/workflows/build.yml/badge.svg?branch=master)](https://github.com/nVotes/juvenal-lib/actions?query=workflow%3Abuild)
+[![Build](https://github.com/nVotes/juvenal-lib/workflows/build/badge.svg?branch=master)](https://github.com/nVotes/juvenal-lib/actions?query=workflow%3Abuild)
 [![Coverage Status](https://coveralls.io/repos/github/nVotes/juvenal-lib/badge.svg?branch=master)](https://coveralls.io/github/nVotes/juvenal-lib?branch=master)
 [![Community chat](https://img.shields.io/discord/651538033291690014)](https://discord.gg/dfdnFWJ)
 
