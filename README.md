@@ -1,7 +1,8 @@
 # juvenal-lib: nVotes ElectionGuard SDK Verifier
 
 [![Dependencies badge](https://david-dm.org/nVotes/juvenal-lib.svg)](https://david-dm.org/nVotes/juvenal-lib)
-[![Travis badge](https://travis-ci.org/nVotes/juvenal-lib.svg?branch=master)](https://travis-ci.org/nVotes/juvenal-lib)
+[![CI/CD](https://github.com/nVotes/juvenal-lib/workflows/.github/workflows/ci_cd.yml/badge.svg)
+)](https://github.com/nVotes/juvenal-lib/actions?query=workflow%3ACI%2FCD)
 [![Coverage Status](https://coveralls.io/repos/github/nVotes/juvenal-lib/badge.svg?branch=master)](https://coveralls.io/github/nVotes/juvenal-lib?branch=master)
 [![Community chat](https://img.shields.io/discord/651538033291690014)](https://discord.gg/dfdnFWJ)
 
