@@ -62,11 +62,11 @@ node build/src/bin/verifier.js tests/data/valid_encrypted.json
 
 ## Contribute
 
-There are multiple ways to contribute to the nVotes verifier:
+There are multiple ways to contribute:
 
 - [Submit bugs] and help us verify fixes as they are checked in.
 - Create [Pull Requests] implementing new features.
-- Create [Pull Requests] implementing proofs verification for a verifiable voting system.
+- Create [Pull Requests] implementing proofs verification for a verifiable voting system not yet supported.
 - Review [source code changes].
 - Use the [discord channel] to engage with the community.
 
@@ -118,7 +118,7 @@ not really relevant other than for development purposes:
 - [link-staged]: Allows to run linting commands on files that are staged to be committed.
 - [husky]: Makes git hooks simpler to use.
 
-[nvotes]: https://nvotes.com
+[nVotes]: https://nvotes.com
 [Juvenal]: https://github.com/nvotes/juvenal
 [ElectionGuard]: https://github.com/microsoft/electionguard
 [ElectionGuard specification]: https://raw.githubusercontent.com/microsoft/ElectionGuard-SDK-Specification/b2c767ae9fed05be36accad04b5bc6b3512be5ad/Informal/ElectionGuardSpecificationV0.85.pdf
@@ -130,8 +130,8 @@ not really relevant other than for development purposes:
 [@types/node]: https://www.npmjs.com/package/@types/node
 [jest]: https://jestjs.io/
 [typedoc]: https://github.com/TypeStrong/typedoc
-[submit bugs]: https://github.com/nVotesOrg/nvotes-electionguard-sdk-verifier/issues
-[source code changes]: https://github.com/nVotesOrg/juvenal-lib/pulls
+[submit bugs]: https://github.com/nVotes/juvenal-lib/issues
+[source code changes]: https://github.com/nVotes/juvenal-lib/pulls
 [json-schema-to-TypeScript]: https://www.npmjs.com/package/json-schema-to-TypeScript
 [coveralls]: https://www.npmjs.com/package/coveralls
 [eslint]: https://www.npmjs.com/package/eslint
