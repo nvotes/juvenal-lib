@@ -17,7 +17,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - run: echo ${{github.event_name}}; echo ${{github.ref}}
     - run: yarn global add typescript
     - run: yarn
     - run: yarn lint:check
@@ -29,14 +28,14 @@ jobs:
 
     # update code coverage in codecov.io
     - uses: codecov/codecov-action@v1
-      if: github.event_name == 'push' && github.ref == 'master'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # required, use a github secret for that
         fail_ci_if_error: true              # optional (default=false)
 
     # publish documentation in gh-pages branch
     - name: Deploy doc
-      if: github.event_name == 'push' && github.ref == 'master'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: peaceiris/actions-gh-pages@v3
       with:
         deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
@@ -44,7 +43,7 @@ jobs:
 
     # publish built code in vmaster branch
     - name: Deploy library to vmaster branch
-      if: github.event_name == 'push' && github.ref == 'master'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: peaceiris/actions-gh-pages@v3
       with:
         deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
