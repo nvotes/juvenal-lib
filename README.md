@@ -141,3 +141,4 @@ There are multiple ways to contribute to the nVotes verifier:
 [husky]: https://www.npmjs.com/package/husky
 [Helios Voting]: https://heliosvoting.org/
 [discord channel]: https://discord.gg/dfdnFWJ
+[Pull Requests]: https://github.com/nVotes/juvenal-lib/pulls
