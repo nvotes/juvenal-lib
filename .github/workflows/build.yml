@@ -17,6 +17,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - run: echo ${{github.event_name}}; echo ${{github.ref}}
     - run: yarn global add typescript
     - run: yarn
     - run: yarn lint:check
