@@ -26,15 +26,8 @@ jobs:
     - run: npm run build --if-present
     - run: npm run doc
     - run: node node_modules/jest/bin/jest.js --coverage
-      
-    - name: Coveralls parallel
-      uses: coverallsapp/github-action@master
+
+    - uses: codecov/codecov-action@v1
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        parallel: true
-        
-    - name: Coveralls Finished
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        parallel-finished: true
+        token: ${{ secrets.CODECOV_TOKEN }} # required, use a github secret for that
+        fail_ci_if_error: true              # optional (default=false)
