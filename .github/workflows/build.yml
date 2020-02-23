@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x]
+        node-version: [12.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -18,14 +18,12 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - run: npm update
-    - run: npm install -g typescript
-    - run: npm install
-    - run: tsc --noEmit
-    - run: node node_modules/eslint/bin/eslint.js '{src,tests}/**/*.{js,ts,tsx}' --quiet
-    - run: npm run build --if-present
-    - run: npm run doc
-    - run: node node_modules/jest/bin/jest.js --coverage
+    - run: yarn global add typescript
+    - run: yarn
+    - run: yarn lint:check
+    - run: yarn build
+    - run: yarn doc
+    - run: yarn coverage
 
     - uses: codecov/codecov-action@v1
       with:

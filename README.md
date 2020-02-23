@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/github/license/nVotes/juvenal-lib)](License)
 [![Dependencies badge](https://david-dm.org/nVotes/juvenal-lib.svg)](https://david-dm.org/nVotes/juvenal-lib)
 [![Build](https://github.com/nVotes/juvenal-lib/workflows/build/badge.svg?branch=master)](https://github.com/nVotes/juvenal-lib/actions?query=workflow%3Abuild)
-[![Coverage status](https://img.shields.io/codecov/c/github/nVotes/juvenal-lib/coverage.svg)](https://codecov.io/gh/nVotes/juvenal-lib/)
+[![Coverage status](https://img.shields.io/codecov/c/github/nVotes/juvenal-lib)](https://codecov.io/gh/nVotes/juvenal-lib/)
 [![Community chat](https://img.shields.io/discord/651538033291690014)](https://discord.gg/dfdnFWJ)
 
 [nVotes][electionguard sdk] Verifier enables the verification of election
