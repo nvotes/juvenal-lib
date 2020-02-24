@@ -109,10 +109,10 @@ not really relevant other than for development purposes:
 
 - [jest]: TypeScript-friendy testing framework.
 - [typedoc]: Generates package documentation.
-- [json-schema-to-TypeScript]: Compile json schema to TypeScript typings.
+- [json-schema-to-typescript]: Compile json schema to TypeScript typings.
 - [eslint]: A linting library.
-- [@TypeScript-eslint/parser]: A parser that allows ESLint to lint TypeScript code.
-- [@TypeScript-eslint/eslint-plugin]: A plugin that contains some ESLint rules that are TypeScript specific.
+- [@typescript-eslint/parser]: A parser that allows ESLint to lint TypeScript code.
+- [@typescript-eslint/eslint-plugin]: A plugin that contains some ESLint rules that are TypeScript specific.
 - [prettier]: The core prettier library.
 - [eslint-config-prettier]: Disables ESLint rules that might conflict with prettier.
 - [eslint-plugin-prettier]: Runs prettier as an ESLint rule.
@@ -133,11 +133,11 @@ not really relevant other than for development purposes:
 [typedoc]: https://github.com/TypeStrong/typedoc
 [submit bugs]: https://github.com/nVotes/juvenal-lib/issues
 [source code changes]: https://github.com/nVotes/juvenal-lib/pulls
-[json-schema-to-TypeScript]: https://www.npmjs.com/package/json-schema-to-TypeScript
+[json-schema-to-typescript]: https://www.npmjs.com/package/json-schema-to-typescript
 [coveralls]: https://www.npmjs.com/package/coveralls
 [eslint]: https://www.npmjs.com/package/eslint
-[@TypeScript-eslint/parser]: https://www.npmjs.com/package/@TypeScript-eslint/parser
-[@TypeScript-eslint/eslint-plugin]: https://www.npmjs.com/package/@TypeScript-eslint/eslint-plugin
+[@typescript-eslint/parser]: https://www.npmjs.com/package/@typescript-eslint/parser
+[@typescript-eslint/eslint-plugin]: https://www.npmjs.com/package/@typescript-eslint/eslint-plugin
 [prettier]: https://www.npmjs.com/package/prettier
 [eslint-config-prettier]: https://www.npmjs.com/package/eslint-config-prettier
 [eslint-plugin-prettier]: https://www.npmjs.com/package/eslint-plugin-prettier
