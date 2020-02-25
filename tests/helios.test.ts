@@ -139,4 +139,75 @@ describe('Verify pregenerated helios data', () => {
     )
     expect(okCds).toBe(true)
   })
+
+  test('vector choice disjunctive (CDS) proof', () => {
+    const choices = ballot.vote.answers[1].choices
+
+    const elements = choices.map((x: any) => {
+      const a = strDecToByteArray(x.alpha)
+      const b = strDecToByteArray(x.beta)
+      return ppGroup.prod([pGroup.toElement(a), pGroup.toElement(b)])
+    })
+
+    const sum: arithm.PPGroupElement = elements.reduce(
+      (
+        encryptedSum: arithm.PPGroupElement,
+        ciphertext: arithm.PPGroupElement
+      ) => encryptedSum.mul(ciphertext),
+      ppGroup.getONE()
+    )
+
+    const op = ballot.vote.answers[1].overall_proof
+
+    const g1 = pGroup.getg()
+    const g2 = publicKey
+    const pairCDS = ppGroup.prod([g1, g2])
+    const ehCds = new arithm.ExpHom(pGroup.pRing, pairCDS)
+    const minimum = 1
+    const oSps: SchnorrProofHelios[] = []
+    const oInstances: arithm.PPGroupElement[] = []
+    const oCommitments: eio.ByteTree[] = []
+    const oChallenges: eio.ByteTree[] = []
+    const oResponses: eio.ByteTree[] = []
+
+    op.forEach((proof: any, index: number) => {
+      oSps.push(new SchnorrProofHelios(ehCds))
+      const exp = new arithm.LargeInteger('' + (index + minimum))
+      const instance = ppGroup.prod([
+        sum.project(0),
+        sum.project(1).mul(g1.inv().exp(exp))
+      ])
+      oInstances.push(instance)
+      const c1 = util.hexToByteArray(BigInt(proof.commitment.A).toString(16))
+      const c2 = util.hexToByteArray(BigInt(proof.commitment.B).toString(16))
+      oCommitments.push(
+        new eio.ByteTree([
+          eio.ByteTree.asByteTree(c1),
+          eio.ByteTree.asByteTree(c2)
+        ])
+      )
+      const ch = util.hexToByteArray(BigInt(proof.challenge).toString(16))
+      oChallenges.push(eio.ByteTree.asByteTree(ch))
+      const r = util.hexToByteArray(BigInt(proof.response).toString(16))
+      oResponses.push(eio.ByteTree.asByteTree(r))
+    })
+
+    const responses = []
+    responses[0] = new eio.ByteTree(oChallenges)
+    responses[1] = new eio.ByteTree(oResponses)
+
+    const oCds = new SigmaProofOr(pGroup.pRing, oSps)
+    const oProof = new eio.ByteTree([
+      new eio.ByteTree(oCommitments),
+      new eio.ByteTree(responses)
+    ])
+    const allOk = oCds.verify(
+      labelBytes,
+      oInstances,
+      crypto.sha256,
+      oProof.toByteArray()
+    )
+
+    expect(allOk).toBe(true)
+  })
 })
