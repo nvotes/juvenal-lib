@@ -1,9 +1,9 @@
 # juvenal-lib: The universal election verifier library
 
-[![License](https://img.shields.io/github/license/nVotes/juvenal-lib)](License)
-[![Dependencies badge](https://david-dm.org/nVotes/juvenal-lib.svg)](https://david-dm.org/nVotes/juvenal-lib)
-[![Build](https://github.com/nVotes/juvenal-lib/workflows/build/badge.svg?branch=master)](https://github.com/nVotes/juvenal-lib/actions?query=workflow%3Abuild)
-[![Coverage status](https://img.shields.io/codecov/c/github/nVotes/juvenal-lib)](https://codecov.io/gh/nVotes/juvenal-lib/)
+[![License](https://img.shields.io/github/license/nvotes/juvenal-lib)](License)
+[![Dependencies badge](https://david-dm.org/nvotes/juvenal-lib.svg)](https://david-dm.org/nvotes/juvenal-lib)
+[![Build](https://github.com/nvotes/juvenal-lib/workflows/build/badge.svg?branch=master)](https://github.com/nvotes/juvenal-lib/actions?query=workflow%3Abuild)
+[![Coverage status](https://img.shields.io/codecov/c/github/nvotes/juvenal-lib)](https://codecov.io/gh/nvotes/juvenal-lib/)
 [![Community chat](https://img.shields.io/discord/651538033291690014)](https://discord.gg/dfdnFWJ)
 
 - API Documentation: [https://nvotes.github.io/juvenal-lib]
@@ -131,8 +131,8 @@ not really relevant other than for development purposes:
 [@types/node]: https://www.npmjs.com/package/@types/node
 [jest]: https://jestjs.io/
 [typedoc]: https://github.com/TypeStrong/typedoc
-[submit bugs]: https://github.com/nVotes/juvenal-lib/issues
-[source code changes]: https://github.com/nVotes/juvenal-lib/pulls
+[submit bugs]: https://github.com/nvotes/juvenal-lib/issues
+[source code changes]: https://github.com/nvotes/juvenal-lib/pulls
 [json-schema-to-typescript]: https://www.npmjs.com/package/json-schema-to-typescript
 [coveralls]: https://www.npmjs.com/package/coveralls
 [eslint]: https://www.npmjs.com/package/eslint
