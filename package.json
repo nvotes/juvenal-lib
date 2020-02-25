@@ -12,8 +12,8 @@
     "doc": "./node_modules/typedoc/bin/typedoc --out build/doc/ src/",
     "generate_election_record_types": "cd ./vendors/electionguard-schema-0.85/; node ./generate_election_record_types.js; cd ../..",
     "coverage": "node node_modules/jest/bin/jest.js --coverage",
-    "lint:fix": "tsc --noEmit && node node_modules/eslint/bin/eslint.js '{src,tests}/**/*.{js,ts}' --fix",
-    "lint:check": "tsc --noEmit && node node_modules/eslint/bin/eslint.js '{src,tests}/**/*.{js,ts}' --quiet"
+    "lint:fix": "tsc --noEmit && node node_modules/eslint/bin/eslint.js \"{src,tests}/**/*.{js,ts}\" --fix",
+    "lint:check": "tsc --noEmit && node node_modules/eslint/bin/eslint.js \"{src,tests}/**/*.{js,ts}\" --quiet"
   },
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
