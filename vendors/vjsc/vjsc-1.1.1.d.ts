@@ -239,6 +239,8 @@ export declare namespace eio {
         toByteArray(): Uint8Array
         toByteArrayRaw(): Uint8Array
         toPrettyString(): string
+
+        value: Uint8Array | Array<ByteTree>
     }
 }
 
