@@ -12,7 +12,8 @@ module.exports = {
         "^.+\\.ts$": "ts-jest"
     },
     testMatch: [
-        "**/*.test.ts"
+        // "**/*.test.ts"
+        "**/helios.test.ts"
     ],
     verbose: true,
     testEnvironment: "node"
