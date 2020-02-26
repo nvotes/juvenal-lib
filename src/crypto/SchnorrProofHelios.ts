@@ -13,30 +13,39 @@ export class SchnorrProofHelios extends SchnorrProof {
     second: crypto.HashFunction
   ): arithm.PRingElement {
     const commitmentsBt = first.value[2] as eio.ByteTree
-    const commitments = commitmentsBt.value as Array<eio.ByteTree>
+    let commitmentString
 
-    const cStrings: Array<string> = commitments.map((value: eio.ByteTree) => {
-      if (value.value[0] instanceof eio.ByteTree) {
-        const pair: Array<eio.ByteTree> = value.value as Array<eio.ByteTree>
+    if (typeof commitmentsBt.value[0] == 'number') {
+      const commitments = commitmentsBt.value
+      commitmentString = BigInt(
+        '0x' + util.byteArrayToHex(commitments as Uint8Array)
+      ).toString()
+    } else {
+      const commitments = commitmentsBt.value as Array<eio.ByteTree>
+      const cStrings: Array<string> = commitments.map((value: eio.ByteTree) => {
+        if (value.value[0] instanceof eio.ByteTree) {
+          const pair: Array<eio.ByteTree> = value.value as Array<eio.ByteTree>
 
-        const a = BigInt(
-          '0x' + util.byteArrayToHex(pair[0].value as Uint8Array)
-        ).toString()
+          const a = BigInt(
+            '0x' + util.byteArrayToHex(pair[0].value as Uint8Array)
+          ).toString()
 
-        const b = BigInt(
-          '0x' + util.byteArrayToHex(pair[1].value as Uint8Array)
-        ).toString()
+          const b = BigInt(
+            '0x' + util.byteArrayToHex(pair[1].value as Uint8Array)
+          ).toString()
 
-        return a + ',' + b
-      } else {
-        return BigInt(
-          '0x' + util.byteArrayToHex(value.value as Uint8Array)
-        ).toString()
-      }
-    })
+          return a + ',' + b
+        } else {
+          return BigInt(
+            '0x' + util.byteArrayToHex(value.value as Uint8Array)
+          ).toString()
+        }
+      })
 
-    const all = cStrings.join(',')
-    const digest = this.sha1(all)
+      commitmentString = cStrings.join(',')
+    }
+
+    const digest = this.sha1(commitmentString)
     const digestBytes = util.hexToByteArray(digest)
 
     const challenge = this.homomorphism.domain

@@ -8,6 +8,7 @@ import {
 } from '../src/crypto/utils'
 import { SchnorrProofHelios } from '../src/crypto/SchnorrProofHelios'
 import { SigmaProofOr } from '../src/crypto/SigmaProofOr'
+import { SchnorrProof } from '../src/crypto/SchnorrProof'
 
 // Helios json data
 let election: any
@@ -44,6 +45,28 @@ beforeAll(() => {
 })
 
 describe('Verify pregenerated helios data', () => {
+  test('trustee key share proof of knowledge (Schnorr) ', () => {
+    const pk1 = trustees[0].public_key.y
+    const pk1b = strDecToByteArray(pk1)
+    const pk1e = pGroup.toElement(pk1b)
+    const pok = trustees[0].pok
+
+    const commitmentb = strDecToByteArray(pok.commitment)
+    const responseb = strDecToByteArray(pok.response)
+
+    const eh = new arithm.ExpHom(pGroup.pRing, pGroup.getg())
+    const sp = new SchnorrProofHelios(eh)
+
+    const commitment = eio.ByteTree.asByteTree(commitmentb)
+    const response = eio.ByteTree.asByteTree(responseb)
+
+    const proof = new eio.ByteTree([commitment, response])
+
+    const ok = sp.verify(labelBytes, pk1e, crypto.sha256, proof.toByteArray())
+
+    expect(ok).toBe(true)
+  })
+
   test('election public key constructed correctly', () => {
     const pk1 = trustees[0].public_key.y
     const pk2 = trustees[1].public_key.y
@@ -178,17 +201,17 @@ describe('Verify pregenerated helios data', () => {
         sum.project(1).mul(g1.inv().exp(exp))
       ])
       oInstances.push(instance)
-      const c1 = util.hexToByteArray(BigInt(proof.commitment.A).toString(16))
-      const c2 = util.hexToByteArray(BigInt(proof.commitment.B).toString(16))
+      const c1 = strDecToByteArray(proof.commitment.A)
+      const c2 = strDecToByteArray(proof.commitment.B)
       oCommitments.push(
         new eio.ByteTree([
           eio.ByteTree.asByteTree(c1),
           eio.ByteTree.asByteTree(c2)
         ])
       )
-      const ch = util.hexToByteArray(BigInt(proof.challenge).toString(16))
+      const ch = strDecToByteArray(proof.challenge)
       oChallenges.push(eio.ByteTree.asByteTree(ch))
-      const r = util.hexToByteArray(BigInt(proof.response).toString(16))
+      const r = strDecToByteArray(proof.response)
       oResponses.push(eio.ByteTree.asByteTree(r))
     })
 
@@ -209,5 +232,56 @@ describe('Verify pregenerated helios data', () => {
     )
 
     expect(allOk).toBe(true)
+  })
+
+  test('decryption proof (CP)', () => {
+    const dec1 = pGroup.toElement(
+      strDecToByteArray(trustees[0].decryption_factors[0][0])
+    )
+
+    const dec2 = pGroup.toElement(
+      strDecToByteArray(trustees[1].decryption_factors[0][0])
+    )
+
+    const pk1b = strDecToByteArray(trustees[0].public_key.y)
+    const pk2b = strDecToByteArray(trustees[1].public_key.y)
+
+    const pk1e = pGroup.toElement(pk1b)
+
+    const answers = ballot.vote.answers
+    const alphab = strDecToByteArray(answers[0].choices[0].alpha)
+    const alphae = pGroup.toElement(alphab)
+
+    const pairChaum = ppGroup.prod([pGroup.getg(), alphae])
+    const ehChaum = new arithm.ExpHom(pGroup.pRing, pairChaum)
+
+    const proof1 = new SchnorrProofHelios(ehChaum)
+
+    const instance1 = ppGroup.prod([pk1e, dec1])
+
+    const comm1b = strDecToByteArray(
+      trustees[0].decryption_proofs[0][0].commitment.A
+    )
+    const comm2b = strDecToByteArray(
+      trustees[0].decryption_proofs[0][0].commitment.B
+    )
+
+    const comm1bt = eio.ByteTree.asByteTree(comm1b)
+    const comm2bt = eio.ByteTree.asByteTree(comm2b)
+
+    const commitmentPair = new eio.ByteTree([comm1bt, comm2bt])
+
+    const cpRb = strDecToByteArray(trustees[0].decryption_proofs[0][0].response)
+    const rbtt = eio.ByteTree.asByteTree(cpRb)
+
+    const prf = new eio.ByteTree([commitmentPair, rbtt])
+
+    const ok = proof1.verify(
+      labelBytes,
+      instance1,
+      crypto.sha256,
+      prf.toByteArray()
+    )
+    expect(ok).toBe(true)
   })
 })
