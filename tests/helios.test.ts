@@ -22,10 +22,13 @@ let publicKey: arithm.ModPGroupElement
 let ppGroup: arithm.PPGroup
 
 function readData(): void {
+  // from url helios/elections/<election_id>
   election = JSON.parse(
     fs.readFileSync('tests/data/helios_election.json', 'utf8')
   )
+  // from url helios/elections/<election_id>/ballots/<voter_id>/last
   ballot = JSON.parse(fs.readFileSync('tests/data/helios_ballot.json', 'utf8'))
+  // from url helios/elections/<election_id>/trustees/
   trustees = JSON.parse(
     fs.readFileSync('tests/data/helios_trustees.json', 'utf8')
   )
@@ -283,5 +286,34 @@ describe('Verify pregenerated helios data', () => {
       prf.toByteArray()
     )
     expect(ok).toBe(true)
+  })
+
+  test('decryption factors yield plaintext', () => {
+    // from url helios/elections/<election_id>/result
+    const tally = JSON.parse('[[1, 1, 0], [0, 1, 1, 0, 0]]')
+
+    const dec1 = pGroup.toElement(
+      strDecToByteArray(trustees[0].decryption_factors[0][0])
+    )
+
+    const dec2 = pGroup.toElement(
+      strDecToByteArray(trustees[1].decryption_factors[0][0])
+    )
+
+    const plaintextExponent = pGroup.pRing.toElement(
+      strDecToByteArray(tally[0][0])
+    )
+
+    const answers = ballot.vote.answers
+    const beta = pGroup.toElement(strDecToByteArray(answers[0].choices[0].beta))
+
+    const result = dec1
+      .mul(dec2)
+      .inv()
+      .mul(beta)
+
+    const plaintext = pGroup.getg().exp(plaintextExponent)
+
+    expect(result.equals(plaintext)).toBe(true)
   })
 })
