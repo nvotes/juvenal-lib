@@ -98,6 +98,6 @@ export class VCoefficientCommitmentsRecord implements VRecord {
             index
           )
       )
-      .map(vCoefficient => vCoefficient.verify(recorder))
+      .map((vCoefficient) => vCoefficient.verify(recorder))
   }
 }

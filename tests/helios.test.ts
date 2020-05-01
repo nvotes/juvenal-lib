@@ -307,10 +307,7 @@ describe('Verify pregenerated helios data', () => {
     const answers = ballot.vote.answers
     const beta = pGroup.toElement(strDecToByteArray(answers[0].choices[0].beta))
 
-    const result = dec1
-      .mul(dec2)
-      .inv()
-      .mul(beta)
+    const result = dec1.mul(dec2).inv().mul(beta)
 
     const plaintext = pGroup.getg().exp(plaintextExponent)
 

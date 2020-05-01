@@ -56,7 +56,7 @@ export class VElectionRecord implements VRecord {
     const validate = getElectionSchemaValidator()
     const valid = validate(this.election)
     if (!valid) {
-      ;(validate.errors as Ajv.ErrorObject[]).forEach(error =>
+      ;(validate.errors as Ajv.ErrorObject[]).forEach((error) =>
         recorder.record(
           /*status=*/ false,
           this.context,
@@ -160,7 +160,7 @@ export class VElectionRecord implements VRecord {
     // Verify that the public key of the election should be the combination
     // of the public keys of all the trustees
     const calculatedJointPublicKey = createJointPublicKey(
-      vCoefficients.map(publicKey => publicKey.firstCoefficientElement),
+      vCoefficients.map((publicKey) => publicKey.firstCoefficientElement),
       modPGroup
     )
 
@@ -188,7 +188,7 @@ export class VElectionRecord implements VRecord {
     }
 
     // Verify coefficient records
-    vCoefficients.map(vCoefficient => vCoefficient.verify(recorder))
+    vCoefficients.map((vCoefficient) => vCoefficient.verify(recorder))
 
     // TODO: get contest selections from ballot coding file. Currently
     // not being included in the election record, so we infer this data from
@@ -196,7 +196,7 @@ export class VElectionRecord implements VRecord {
     let contestInfoArray: VContestInfo[] = []
     if (this.election.cast_ballots.length > 0) {
       contestInfoArray = this.election.cast_ballots[0].contests.map(
-        contest =>
+        (contest) =>
           new VContestInfo(contest.selections.length, contest.max_selections)
       )
     }
@@ -214,11 +214,11 @@ export class VElectionRecord implements VRecord {
             index
           )
       )
-      vCastBallots.map(vCastBallot => vCastBallot.verify(recorder))
+      vCastBallots.map((vCastBallot) => vCastBallot.verify(recorder))
     }
 
     const publicKeys = vCoefficients.map(
-      commitments => commitments.firstCoefficientElement
+      (commitments) => commitments.firstCoefficientElement
     )
     const vContestTallies = this.election.contest_tallies.map(
       (tallyDecryption, index) =>
@@ -233,7 +233,7 @@ export class VElectionRecord implements VRecord {
         )
     )
 
-    vContestTallies.map(vContestTally => vContestTally.verify(recorder))
+    vContestTallies.map((vContestTally) => vContestTally.verify(recorder))
 
     const vSpoiledBallots = this.election.spoiled_ballots.map(
       (spoiledBallot, index) =>
@@ -249,6 +249,6 @@ export class VElectionRecord implements VRecord {
 
     // Note that we can't verify spoiled ballots encryption proofs because
     // they are not currently being included in the election record
-    vSpoiledBallots.map(spoiled => spoiled.verify(recorder))
+    vSpoiledBallots.map((spoiled) => spoiled.verify(recorder))
   }
 }

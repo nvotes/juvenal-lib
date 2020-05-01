@@ -191,7 +191,7 @@ export class VDecryptionRecord implements VRecord {
               index
             )
         )
-        const result = shareRecords.map(share => share.verify(recorder))
+        const result = shareRecords.map((share) => share.verify(recorder))
         if (this.allShares(result)) {
           const shareElements: arithm.ModPGroupElement[] = result
           const combined = shareElements.reduce((value, next) =>
@@ -205,22 +205,24 @@ export class VDecryptionRecord implements VRecord {
               try {
                 // Load the encrypted ballot selections for this contest
                 // as an arithm.PPGroupElement[] array
-                const selections = this.selectionEncryptions.map(selection => {
-                  const selectionAlpha = strDecToModPGroupElement(
-                    selection.public_key,
-                    group
-                  )
-                  const selectionBeta = strDecToModPGroupElement(
-                    selection.ciphertext,
-                    group
-                  )
-                  if (isError(selectionAlpha) || isError(selectionBeta)) {
-                    const error = firstError([selectionAlpha, selectionBeta])
-                    throw error
-                  } else {
-                    return ppGroup.prod([selectionAlpha, selectionBeta])
+                const selections = this.selectionEncryptions.map(
+                  (selection) => {
+                    const selectionAlpha = strDecToModPGroupElement(
+                      selection.public_key,
+                      group
+                    )
+                    const selectionBeta = strDecToModPGroupElement(
+                      selection.ciphertext,
+                      group
+                    )
+                    if (isError(selectionAlpha) || isError(selectionBeta)) {
+                      const error = firstError([selectionAlpha, selectionBeta])
+                      throw error
+                    } else {
+                      return ppGroup.prod([selectionAlpha, selectionBeta])
+                    }
                   }
-                })
+                )
                 // multiply the selections (ciphertexts) to obtain the encrypted
                 // sum of the selections
                 const calculatedEncryptedSum = elgamal.sum(selections, ppGroup)
@@ -255,10 +257,7 @@ export class VDecryptionRecord implements VRecord {
             if (!isError(clearElement)) {
               // verify that g^cleartext = gMessage
               recorder.record(
-                group
-                  .getg()
-                  .exp(clearElement)
-                  .equals(gMessage),
+                group.getg().exp(clearElement).equals(gMessage),
                 this.context,
                 'CleartextMatches',
                 'Cleartext exponentiation should match decrypted'
@@ -318,6 +317,6 @@ export class VDecryptionRecord implements VRecord {
   private allShares(
     obj: (arithm.ModPGroupElement | Error)[] | arithm.ModPGroupElement[]
   ): obj is arithm.ModPGroupElement[] {
-    return obj.filter(value => !isError(value)).length == obj.length
+    return obj.filter((value) => !isError(value)).length == obj.length
   }
 }

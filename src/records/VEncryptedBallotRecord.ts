@@ -126,7 +126,7 @@ export class VEncryptedBallotRecord implements VRecord {
       try {
         // Load the encrypted ballot selections for this contest
         // as an arithm.PPGroupElement[] array
-        const selections = contest.selections.map(selection => {
+        const selections = contest.selections.map((selection) => {
           const c1 = strDecToModPGroupElement(
             selection.message.public_key,
             group
@@ -156,10 +156,7 @@ export class VEncryptedBallotRecord implements VRecord {
           throw error
         } else {
           // Obtain g^-n
-          const gnInv = group
-            .getg()
-            .exp(nElement)
-            .inv()
+          const gnInv = group.getg().exp(nElement).inv()
 
           // Prove that the number of selections is equal to the number
           // of max selections (n). To do that, we homomorphically sum

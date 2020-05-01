@@ -98,6 +98,6 @@ export class VSpoiledBallotRecord implements VRecord {
     )
 
     const flat = flatten2D(decryptions)
-    flat.map(decryption => decryption.verify(recorder))
+    flat.map((decryption) => decryption.verify(recorder))
   }
 }

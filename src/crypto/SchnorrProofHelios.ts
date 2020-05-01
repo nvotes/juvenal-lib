@@ -56,9 +56,6 @@ export class SchnorrProofHelios extends SchnorrProof {
   }
 
   private sha1(bytes: string): string {
-    return crypto2
-      .createHash('sha1')
-      .update(bytes)
-      .digest('hex')
+    return crypto2.createHash('sha1').update(bytes).digest('hex')
   }
 }

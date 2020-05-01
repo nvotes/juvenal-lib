@@ -59,7 +59,7 @@ export class VContestTallyRecord implements VRecord {
   ): ElGamalMessage[] {
     try {
       return this.castBallots.map(
-        ballot =>
+        (ballot) =>
           ballot.contests[this.contestIndex].selections[selectionIndex].message
       )
     } catch (e) {
@@ -86,6 +86,6 @@ export class VContestTallyRecord implements VRecord {
         )
     )
 
-    decryptions.map(decryption => decryption.verify(recorder))
+    decryptions.map((decryption) => decryption.verify(recorder))
   }
 }
