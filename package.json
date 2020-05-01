@@ -49,10 +49,6 @@
     "url": "git://github.com/nvotes/juvenal-lib.git"
   },
   "license": "MIT",
-  "dependencies": {
-    "@types/node": "13.13.4",
-    "ajv": "6.12.2"
-  },
   "jest": {
     "collectCoverageFrom": [
       "!**/node_modules/**",
@@ -72,7 +68,11 @@
       "eslint --fix"
     ]
   },
+  "dependencies": {
+    "ajv": "6.12.2"
+  },
   "devDependencies": {
+    "@types/node": "13.13.4",
     "@types/jest": "25.2.1",
     "@typescript-eslint/eslint-plugin": "2.30.0",
     "@typescript-eslint/parser": "2.30.0",
