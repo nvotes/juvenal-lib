@@ -1,4 +1,4 @@
-import Ajv from 'ajv'
+import Ajv, { ErrorObject, ValidateFunction } from 'ajv'
 import { arithm, util } from '../../vendors/vjsc/vjsc-1.1.1'
 import { ElectionRecord } from '../../vendors/electionguard-schema-0.85/@types/election_record'
 import { schemas } from '../../vendors/electionguard-schema-0.85/json_schemas'
@@ -18,7 +18,7 @@ import { VSpoiledBallotRecord } from './VSpoiledBallotRecord'
  * Using the election schemas, returns a correctly initialized Ajv schema
  * validator.
  */
-function getElectionSchemaValidator(): Ajv.ValidateFunction {
+function getElectionSchemaValidator(): ValidateFunction {
   const ajv = new Ajv({ allErrors: true })
 
   // add related schemas to the validator
@@ -56,7 +56,7 @@ export class VElectionRecord implements VRecord {
     const validate = getElectionSchemaValidator()
     const valid = validate(this.election)
     if (!valid) {
-      ;(validate.errors as Ajv.ErrorObject[]).forEach((error) =>
+      ;(validate.errors as ErrorObject[]).forEach((error) =>
         recorder.record(
           /*status=*/ false,
           this.context,
