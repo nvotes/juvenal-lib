@@ -127,7 +127,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nvotes/juvenal-lib/blob/a1f1768/src/recorders/CLIRecorder.ts#L12">src/recorders/CLIRecorder.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/nvotes/juvenal-lib/blob/885be81/src/recorders/CLIRecorder.ts#L12">src/recorders/CLIRecorder.ts:12</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="recorders_clirecorder.clirecorder.html" class="tsd-signature-type" data-tsd-kind="Class">CLIRecorder</a></h4>
@@ -144,9 +144,14 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/recorders_vrecorder.vrecorder.html">VRecorder</a>.<a href="../interfaces/recorders_vrecorder.vrecorder.html#hasfailures">hasFailures</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/nvotes/juvenal-lib/blob/a1f1768/src/recorders/CLIRecorder.ts#L12">src/recorders/CLIRecorder.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/nvotes/juvenal-lib/blob/885be81/src/recorders/CLIRecorder.ts#L12">src/recorders/CLIRecorder.ts:12</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Returns wether there was any verification that failed</p>
+						</div>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -162,9 +167,17 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/recorders_vrecorder.vrecorder.html">VRecorder</a>.<a href="../interfaces/recorders_vrecorder.vrecorder.html#record">record</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nvotes/juvenal-lib/blob/a1f1768/src/recorders/CLIRecorder.ts#L18">src/recorders/CLIRecorder.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/nvotes/juvenal-lib/blob/885be81/src/recorders/CLIRecorder.ts#L18">src/recorders/CLIRecorder.ts:18</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Record a verification.</p>
+								</div>
+								<p>Note that multiple calls with the same verification id could happen, but
+									if any of them is a failure they should be end up recorded internall
+								as a failure for that VerificationId.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
