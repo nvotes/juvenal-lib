@@ -61,7 +61,7 @@ export class VElectionRecord implements VRecord {
           /*status=*/ false,
           this.context,
           'ValidateJsonSchema',
-          error.dataPath + ' ' + error.message
+          error.instancePath + ' ' + error.message
         )
       )
     } else {
